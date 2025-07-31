@@ -15,7 +15,8 @@
     "@headlessui/react": "^2.2.7",
     "@heroicons/react": "^2.2.0",
     "clsx": "^2.1.1",
-    "framer-motion": "^12.23.12"
+    "framer-motion": "^12.23.12",
+    "flagsmith": "^9.3.0"
   },
   "devDependencies": {
     "@react-router/dev": "^7.2.0",

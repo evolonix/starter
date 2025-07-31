@@ -44,3 +44,29 @@ Create three environments in your GitHub repository:
    Restrict to the `main` branch under `Deployment branches and tags`
 3. **Production**: For production deployments.
    Restrict to the `v*.*.*` tag under `Deployment branches and tags`
+
+## Flagsmith
+
+In a browser, visit the [Flagsmith](https://flagsmith.com/) website and sign up for a free account.
+
+Once you have signed up, create a new project.
+You will start with the default environment of `Development`.
+
+Create the following environments:
+
+- **Preview**: This environment is used for preview deployments.
+- **Staging**: This environment is used for staging deployments.
+- **Production**: This environment is used for production deployments.
+
+You will need the environment ID from each environment to configure your application.
+
+In your GitHub repository, go to `Settings` > `Secrets and variables` > `Actions` > `Manage environment secrets`.
+Create the following secrets for each environment:
+
+- `VITE_FLAGSMITH_ENVIRONMENT_ID`: The environment ID for the associated environment in Flagsmith.
+
+Configure your development environment by creating a `.env.local` file in the root of the "web" project with the following content:
+
+```dotenv
+VITE_FLAGSMITH_ENVIRONMENT_ID=your_development_environment_id
+```

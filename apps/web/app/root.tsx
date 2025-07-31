@@ -1,4 +1,9 @@
 import {
+  FeatureFlagProvider,
+  FeatureFlags,
+  FeatureFlagToggleDialog,
+} from '@starter/feature-flags';
+import {
   Links,
   Meta,
   Outlet,
@@ -50,6 +55,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+const initialFlags: FeatureFlags = {};
+
 export default function App() {
-  return <Outlet />;
+  return (
+    <FeatureFlagProvider
+      flagsmithEnvironmentId={import.meta.env.VITE_FLAGSMITH_ENVIRONMENT_ID}
+      initialFlags={initialFlags}
+    >
+      <Outlet />
+
+      <FeatureFlagToggleDialog />
+    </FeatureFlagProvider>
+  );
 }

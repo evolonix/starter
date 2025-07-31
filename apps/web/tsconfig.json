@@ -3,6 +3,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/features/feature-flags"
+    },
+    {
       "path": "./tsconfig.app.json"
     },
     {

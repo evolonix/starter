@@ -13,6 +13,7 @@
     "@react-router/node": "^7.2.0",
     "@react-router/serve": "^7.2.0",
     "clsx": "^2.1.1",
+    "flagsmith": "^9.3.0",
     "framer-motion": "^12.23.12",
     "isbot": "^4.4.0",
     "react": "19.0.0",
@@ -78,7 +79,8 @@
   },
   "workspaces": [
     "apps/*",
-    "libs/*"
+    "libs/*",
+    "libs/features/*"
   ],
   "config": {
     "commitizen": {
