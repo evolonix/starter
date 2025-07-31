@@ -2,7 +2,9 @@
   "name": "@starter/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prepare": "husky install"
+  },
   "private": true,
   "dependencies": {
     "@react-router/node": "^7.2.0",
@@ -61,7 +63,8 @@
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.29.0",
     "vite": "^6.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^3.0.0",
+    "husky": "^8.0.0"
   },
   "workspaces": [
     "apps/*"
