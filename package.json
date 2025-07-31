@@ -14,6 +14,9 @@
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@commitlint/config-nx-scopes": "^19.8.1",
     "@eslint/js": "^9.8.0",
     "@nx/devkit": "21.3.10",
     "@nx/eslint": "21.3.10",
