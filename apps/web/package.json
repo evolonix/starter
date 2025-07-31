@@ -18,5 +18,12 @@
     "@types/node": "^20.0.0",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0"
+  },
+  "nx": {
+    "targets": {
+      "docker-build": {
+        "command": "docker build -t web:dev -f apps/web/Dockerfile ."
+      }
+    }
   }
 }
