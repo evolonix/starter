@@ -8,6 +8,8 @@
   },
   "private": true,
   "dependencies": {
+    "@conform-to/react": "^1.8.2",
+    "@conform-to/zod": "^1.8.2",
     "@headlessui/react": "^2.2.7",
     "@heroicons/react": "^2.2.0",
     "@react-router/node": "^7.2.0",
@@ -19,7 +21,8 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router": "^7.2.0",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@babel/core": "^7.14.5",
