@@ -87,5 +87,24 @@
         "linter": "eslint"
       }
     }
+  },
+  "release": {
+    "projects": ["!**/*-e2e"],
+    "version": {
+      "conventionalCommits": true,
+      "versionActionsOptions": {
+        "skipLockFileUpdate": true
+      },
+      "fallbackCurrentVersionResolver": "disk"
+    },
+    "changelog": {
+      "workspaceChangelog": {
+        "createRelease": "github"
+      },
+      "automaticFromRef": true
+    }
+  },
+  "sync": {
+    "applyChanges": true
   }
 }

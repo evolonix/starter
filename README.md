@@ -21,3 +21,26 @@ To use Nx Cloud, you need to create an account and set up your project. Follow t
 9. Next, `Manage environment secrets`.
 10. Create a new secret for the `Staging` environment.
 11. Name the secret `NX_CLOUD_ACCESS_TOKEN` and paste the read-write access token you received from Nx Cloud.
+
+## Fly.io API Token and Deployment Environments
+
+You need to set up a Fly.io API token to deploy your application. You can create a token by following these steps:
+
+1. Go to the [Fly.io dashboard](https://fly.io/dashboard).
+2. Click on the "Account" menu item in the top right corner and select "Settings".
+3. Go to the "Tokens" section and click "Create Token".
+4. Enter "GitHub" as the token name and leave the expiration field blank.
+5. Copy the generated token and store it in a safe place.
+
+Once you have your API token, you can use it to deploy your application.
+
+In your GitHub repository, go to `Settings` > `Secrets and variables` > `Actions` > `New repository secret`.
+Name the secret `FLY_API_TOKEN` and paste the token you copied from the Fly.io dashboard.
+
+Create three environments in your GitHub repository:
+
+1. **Preview**: For PR previews.
+2. **Staging**: For staging deployments.
+   Restrict to the `main` branch under `Deployment branches and tags`
+3. **Production**: For production deployments.
+   Restrict to the `v*.*.*` tag under `Deployment branches and tags`

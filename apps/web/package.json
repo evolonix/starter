@@ -34,7 +34,22 @@
             "command": "docker build -t web:preview -f apps/web/Dockerfile.preview ."
           }
         }
+      },
+      "deploy": {
+        "command": "YELLOW='\\033[0;33m' RESET='\\033[0m'; echo \"${YELLOW}Development deployment is not supported.${RESET}\"",
+        "configurations": {
+          "production": {
+            "command": "flyctl deploy --config apps/web/fly.production.toml --image-label starter-web-v$(npm --prefix apps/web pkg get version | tr -d '\"')"
+          },
+          "staging": {
+            "command": "flyctl deploy --config apps/web/fly.staging.toml"
+          },
+          "preview": {
+            "command": "flyctl deploy --config apps/web/fly.preview.toml"
+          }
+        }
       }
     }
-  }
+  },
+  "version": "0.0.0"
 }
