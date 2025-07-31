@@ -52,6 +52,9 @@
   "references": [
     {
       "path": "../../libs/features/feature-flags/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/ui/tsconfig.lib.json"
     }
   ]
 }

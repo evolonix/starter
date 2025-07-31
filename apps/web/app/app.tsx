@@ -1,10 +1,11 @@
-import NxWelcome from './nx-welcome';
+import { LayoutNavbar, LayoutSidebar, SidebarLayout } from '@starter/ui';
+import { Outlet } from 'react-router';
 
 export function App() {
   return (
-    <div>
-      <NxWelcome title="@starter/web" />
-    </div>
+    <SidebarLayout navbar={<LayoutNavbar />} sidebar={<LayoutSidebar />}>
+      <Outlet />
+    </SidebarLayout>
   );
 }
 

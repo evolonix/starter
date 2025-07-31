@@ -4,7 +4,10 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
-    "update-deps": "bash scripts/cp-all-deps.sh"
+    "dev": "npx nx dev web",
+    "start": "npm run dev -- --host",
+    "update-deps": "bash scripts/cp-all-deps.sh",
+    "codegen:all": "npx nx run-many --target=codegen --all"
   },
   "private": true,
   "dependencies": {

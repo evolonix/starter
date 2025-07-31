@@ -2,6 +2,8 @@
 
 To get started with this project, you need to set up a few things.
 
+First thing first, search and replace all occurences of `starter` and `Starter` in the codebase with your project name.
+
 ## Nx Cloud
 
 To use Nx Cloud, you need to create an account and set up your project. Follow these steps:
@@ -69,4 +71,12 @@ Configure your development environment by creating a `.env.local` file in the ro
 
 ```dotenv
 VITE_FLAGSMITH_ENVIRONMENT_ID=your_development_environment_id
+```
+
+## Other
+
+After installing or updating any dependencies, run the following command to ensure the web app has the latest dependencies when deploying with Docker while omitting devDependencies:
+
+```bash
+npm run update-deps
 ```
