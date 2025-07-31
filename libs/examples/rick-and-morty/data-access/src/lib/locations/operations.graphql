@@ -1,0 +1,21 @@
+#import './fragments.graphql';
+
+query Locations($page: Int, $filter: FilterLocation) {
+  locations(page: $page, filter: $filter) {
+    info {
+      count
+      pages
+      next
+      prev
+    }
+    results {
+      ...LocationDetails
+    }
+  }
+}
+
+query LocationById($id: ID!) {
+  location(id: $id) {
+    ...LocationDetails
+  }
+}

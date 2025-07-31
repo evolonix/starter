@@ -1,0 +1,21 @@
+fragment CharacterSummary on Character {
+  id
+  name
+  status
+  species
+  type
+  gender
+  image
+  created
+}
+
+fragment LocationDetails on Location {
+  id
+  name
+  dimension
+  residents {
+    ...CharacterSummary
+  }
+  type
+  created
+}

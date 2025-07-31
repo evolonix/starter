@@ -67,6 +67,12 @@
     }
   ],
   "targetDefaults": {
+    "codegen": {
+      "cache": true,
+      "outputs": ["{projectRoot}/src/__generated__"],
+      "inputs": ["{projectRoot}/**/*.graphql"],
+      "dependsOn": ["^codegen"]
+    },
     "test": {
       "dependsOn": ["^build"]
     }

@@ -1,0 +1,21 @@
+#import './fragments.graphql';
+
+query Episodes($page: Int, $filter: FilterEpisode) {
+  episodes(page: $page, filter: $filter) {
+    info {
+      count
+      pages
+      next
+      prev
+    }
+    results {
+      ...EpisodeDetails
+    }
+  }
+}
+
+query EpisodeById($id: ID!) {
+  episode(id: $id) {
+    ...EpisodeDetails
+  }
+}

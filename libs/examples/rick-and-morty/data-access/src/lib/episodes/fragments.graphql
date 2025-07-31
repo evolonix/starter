@@ -1,0 +1,21 @@
+fragment CharacterSummary on Character {
+  id
+  name
+  status
+  species
+  type
+  gender
+  image
+  created
+}
+
+fragment EpisodeDetails on Episode {
+  id
+  name
+  air_date
+  episode
+  characters {
+    ...CharacterSummary
+  }
+  created
+}
