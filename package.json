@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "update-deps": "bash scripts/cp-all-deps.sh"
   },
   "private": true,
   "dependencies": {
