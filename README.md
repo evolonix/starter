@@ -80,3 +80,13 @@ After installing or updating any dependencies, run the following command to ensu
 ```bash
 npm run update-deps
 ```
+
+## First Run
+
+After setting up the above configurations, you can run the project for the first time.
+
+```bash
+npm start
+```
+
+If you receive an error, `Cannot read properties of null (reading 'useContext')`, just refresh the page in your browser. This is a known issue with the development server and should not affect your application in production.
