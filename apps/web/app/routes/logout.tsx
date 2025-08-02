@@ -1,6 +1,6 @@
 import { useForm } from '@conform-to/react';
 
-import { Button, Heading, Link, Logo } from '@starter/ui';
+import { Button, Heading, Link, Logo } from '@~[ .starter.name ]~/ui';
 
 export const Logout = () => {
   const [form] = useForm({
@@ -28,7 +28,7 @@ export const Logout = () => {
         className="flex items-center gap-3 text-zinc-950 dark:text-white forced-colors:text-[CanvasText]"
       >
         <Logo className="size-7 sm:size-6" />
-        <span className="truncate">Starter</span>
+        <span className="truncate">~[ .starter.displayName ]~</span>
       </Link>
       <Heading>Sign out of your account</Heading>
       <Button type="submit" className="w-full">

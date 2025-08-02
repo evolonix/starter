@@ -50,3 +50,5 @@ test-output
 .env
 .env.*
 !.env.example
+
+__generated__

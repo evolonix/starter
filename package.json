@@ -1,13 +1,14 @@
 {
-  "name": "@starter/source",
+  "name": "@~[ .starter.name ]~/source",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
+    "codegen:all": "npx nx run-many --target=codegen --all",
     "dev": "npx nx dev web",
+    "prestart": "npm run codegen:all",
     "start": "npm run dev -- --host",
-    "update-deps": "bash scripts/cp-all-deps.sh",
-    "codegen:all": "npx nx run-many --target=codegen --all"
+    "update-deps": "bash scripts/cp-all-deps.sh"
   },
   "private": true,
   "dependencies": {

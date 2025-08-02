@@ -48,22 +48,22 @@ jobs:
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       # When you enable task distribution, run the e2e-ci task instead of e2e
       - run: npx nx affected -t lint test # e2e
-      - run: npx nx affected -t build --exclude starter
+      - run: npx nx affected -t build --exclude ~[ .starter.name ]~
 
       - id: affected_build_starter
         if: github.event_name != 'workflow_dispatch'
         run: |
-          npx nx show projects --projects starter --affected
-          projects=$(npx nx show projects --projects starter --affected | tr '\n' ' ' | xargs)
+          npx nx show projects --projects ~[ .starter.name ]~ --affected
+          projects=$(npx nx show projects --projects ~[ .starter.name ]~ --affected | tr '\n' ' ' | xargs)
           if [ -z "$projects" ]; then
-            echo "No affected projects found for starter."
+            echo "No affected projects found for ~[ .starter.name ]~."
           fi
           echo "projects=$projects" >> $GITHUB_OUTPUT
 
       - if: github.event_name == 'workflow_dispatch' || steps.affected_build_starter.outputs.projects != ''
-        run: npx nx build starter
+        run: npx nx build ~[ .starter.name ]~
 
-  deploy-starter-preview:
+  deploy-~[ .starter.name ]~-preview:
     environment:
       name: Preview
       # name: pr-${{ github.event.number }}
@@ -82,7 +82,7 @@ jobs:
       # Check status of app and return output if exists or not
       - id: fly_status
         run: |
-          if flyctl status --app "starter-starter-pr-${{ github.event.number }}"; then
+          if flyctl status --app "~[ .starter.name ]~-~[ .starter.name ]~-pr-${{ github.event.number }}"; then
             echo "exists=true" >> $GITHUB_OUTPUT
           else
             echo "exists=false" >> $GITHUB_OUTPUT
@@ -90,16 +90,16 @@ jobs:
 
       - if: ${{ steps.fly_status.outputs.exists == 'false' }}
         run: |
-          flyctl apps create --org starter "starter-starter-pr-${{ github.event.number }}" \
-            --name "starter-starter-pr-${{ github.event.number }}" \
+          flyctl apps create --org ~[ .starter.name ]~ "~[ .starter.name ]~-~[ .starter.name ]~-pr-${{ github.event.number }}" \
+            --name "~[ .starter.name ]~-~[ .starter.name ]~-pr-${{ github.event.number }}" \
             --yes
 
       - run: |
-          flyctl deploy --config apps/starter/fly.preview.toml --app "starter-starter-pr-${{ github.event.number }}" \
+          flyctl deploy --config apps/~[ .starter.name ]~/fly.preview.toml --app "~[ .starter.name ]~-~[ .starter.name ]~-pr-${{ github.event.number }}" \
             --build-arg VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}"
 
       - id: deploy_status
         run: |
-          flyctl status --app "starter-starter-pr-${{ github.event.number }}" --json > status.json
+          flyctl status --app "~[ .starter.name ]~-~[ .starter.name ]~-pr-${{ github.event.number }}" --json > status.json
           hostname=$(jq -r '.Hostname' status.json)
           echo "url=https://${hostname}" >> $GITHUB_OUTPUT

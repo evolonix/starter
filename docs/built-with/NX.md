@@ -7,7 +7,7 @@ npx create-nx-workspace@latest
 Select the following options:
 
 ```
-Where would you like to create your workspace? `starter`
+Where would you like to create your workspace? `~[ .starter.name ]~`
 Which stack do you want to use? `react`
 What framework would you like to use? `none`
 Application name `web`

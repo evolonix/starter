@@ -1,4 +1,4 @@
-import { PageHeader } from '@starter/ui';
+import { PageHeader } from '@~[ .starter.name ]~/ui';
 
 export const Feedback = () => {
   return <PageHeader label="Share Feedback" />;

@@ -12,13 +12,15 @@ import {
   FeatureFlagProvider,
   FeatureFlags,
   FeatureFlagToggleDialog,
-} from '@starter/feature-flags';
+} from '@~[ .starter.name ]~/feature-flags';
 
 import '../styles.css';
 
 export const meta: MetaFunction = () => [
   {
-    title: 'Starter',
+    title: '~[ .starter.displayName ]~',
+    description: '~[ .starter.description ]~',
+    author: '~[ .starter.author ]~',
   },
 ];
 

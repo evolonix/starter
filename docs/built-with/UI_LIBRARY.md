@@ -20,7 +20,7 @@ Update [tsconfig.base.json](../../tsconfig.base.json) to include the import path
     ...
     "baseUrl": ".",
     "paths": {
-      "@starter/ui": ["libs/ui/src/index.ts"]
+      "@~[ .starter.name ]~/ui": ["libs/ui/src/index.ts"]
     }
   },
   ...

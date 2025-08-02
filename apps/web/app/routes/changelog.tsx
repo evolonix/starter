@@ -1,4 +1,4 @@
-import { PageHeader } from '@starter/ui';
+import { PageHeader } from '@~[ .starter.name ]~/ui';
 
 export const Changelog = () => {
   return <PageHeader label="Changelog" />;

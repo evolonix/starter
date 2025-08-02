@@ -10,7 +10,7 @@ import {
   Label,
   Switch,
   SwitchField,
-} from '@starter/ui';
+} from '@~[ .starter.name ]~/ui';
 import { useEffect, useState } from 'react';
 import { useActionKey } from './action-key.hook';
 import { useFeatureFlags } from './feature-flag-provider';

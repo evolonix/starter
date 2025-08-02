@@ -17,7 +17,7 @@ import {
   Strong,
   Text,
   TextLink,
-} from '@starter/ui';
+} from '@~[ .starter.name ]~/ui';
 
 const schema = z.object({
   email: z
@@ -62,7 +62,7 @@ export const Register = () => {
         className="flex items-center gap-3 text-zinc-950 dark:text-white forced-colors:text-[CanvasText]"
       >
         <Logo className="size-7 sm:size-6" />
-        <span className="truncate">Starter</span>
+        <span className="truncate">~[ .starter.displayName ]~</span>
       </Link>
       <Heading>Create your account</Heading>
       <Field>
