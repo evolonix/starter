@@ -50,27 +50,27 @@ jobs:
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       # When you enable task distribution, run the e2e-ci task instead of e2e
       - run: npx nx affected -t lint test # e2e
-      - run: npx nx affected -t build --exclude ~~_.starter.name_~~
+      - run: npx nx affected -t build --exclude ~~_starter.name_~~
 
       - id: affected_build_starter
         if: github.event_name != 'workflow_dispatch'
         run: |
-          npx nx show projects --projects ~~_.starter.name_~~ --affected
-          projects=$(npx nx show projects --projects ~~_.starter.name_~~ --affected | tr '\n' ' ' | xargs)
+          npx nx show projects --projects ~~_starter.name_~~ --affected
+          projects=$(npx nx show projects --projects ~~_starter.name_~~ --affected | tr '\n' ' ' | xargs)
           if [ -z "$projects" ]; then
-            echo "No affected projects found for ~~_.starter.name_~~."
+            echo "No affected projects found for ~~_starter.name_~~."
           fi
           echo "projects=$projects" >> $GITHUB_OUTPUT
 
       - if: github.event_name == 'workflow_dispatch' || steps.affected_build_starter.outputs.projects != ''
-        run: npx nx build ~~_.starter.name_~~
+        run: npx nx build ~~_starter.name_~~
 
-  deploy-~~_.starter.name_~~-staging:
+  deploy-~~_starter.name_~~-staging:
     environment:
       name: Staging
-      url: https://~~_.starter.name_~~-staging.fly.dev
+      url: https://~~_starter.name_~~-staging.fly.dev
     runs-on: ubuntu-latest
-    concurrency: deploy-~~_.starter.name_~~-staging
+    concurrency: deploy-~~_starter.name_~~-staging
     needs: staging
     if: github.event_name == 'workflow_dispatch' || needs.staging.outputs.affected_build_starter != ''
     steps:
@@ -79,7 +79,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - run: |
-          flyctl deploy --config apps/~~_.starter.name_~~/fly.staging.toml \
+          flyctl deploy --config apps/~~_starter.name_~~/fly.staging.toml \
           --build-arg VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

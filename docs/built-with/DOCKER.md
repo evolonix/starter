@@ -8,7 +8,7 @@ Create [apps/web/Dockerfile](../../apps/web/Dockerfile) with the following to be
 # Build with:
 # docker build -t web:dev -f apps/web/Dockerfile .
 # Run with:
-# docker run -it --rm -p 4200:4200 --name ~~_.starter.name_~~-web-dev --label com.docker.compose.project=~~_.starter.name_~~ web:dev
+# docker run -it --rm -p 4200:4200 --name ~~_starter.name_~~-web-dev --label com.docker.compose.project=~~_starter.name_~~ web:dev
 
 # Adjust NODE_VERSION as desired
 ARG NODE_VERSION=23.6.0
@@ -45,7 +45,7 @@ Create [docker-compose.yml](../../docker-compose.yml) with the following to be u
 services:
   web:
     image: web:dev
-    container_name: ~~_.starter.name_~~-web-dev
+    container_name: ~~_starter.name_~~-web-dev
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile

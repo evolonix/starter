@@ -1,5 +1,5 @@
 {
-  "name": "@~~_.starter.name_~~/feature-flags",
+  "name": "@~~_starter.name_~~/feature-flags",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",

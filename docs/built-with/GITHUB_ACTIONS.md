@@ -240,7 +240,7 @@ jobs:
       # Check status of app and return output if exists or not
       - id: fly_status
         run: |
-          if flyctl status --app "~~_.starter.name_~~-web-pr-${{ github.event.number }}"; then
+          if flyctl status --app "~~_starter.name_~~-web-pr-${{ github.event.number }}"; then
             echo "exists=true" >> $GITHUB_OUTPUT
           else
             echo "exists=false" >> $GITHUB_OUTPUT
@@ -248,16 +248,16 @@ jobs:
 
       - if: ${{ steps.fly_status.outputs.exists == 'false' }}
         run: |
-          flyctl apps create --org ~~_.starter.name_~~ "~~_.starter.name_~~-web-pr-${{ github.event.number }}" \
-            --name "~~_.starter.name_~~-web-pr-${{ github.event.number }}" \
+          flyctl apps create --org ~~_starter.name_~~ "~~_starter.name_~~-web-pr-${{ github.event.number }}" \
+            --name "~~_starter.name_~~-web-pr-${{ github.event.number }}" \
             --yes
 
       - run: |
-          flyctl deploy --config apps/web/fly.preview.toml --app "~~_.starter.name_~~-web-pr-${{ github.event.number }}"
+          flyctl deploy --config apps/web/fly.preview.toml --app "~~_starter.name_~~-web-pr-${{ github.event.number }}"
 
       - id: deploy_status
         run: |
-          flyctl status --app "~~_.starter.name_~~-web-pr-${{ github.event.number }}" --json > status.json
+          flyctl status --app "~~_starter.name_~~-web-pr-${{ github.event.number }}" --json > status.json
           hostname=$(jq -r '.Hostname' status.json)
           echo "url=https://${hostname}" >> $GITHUB_OUTPUT
 ```
@@ -289,7 +289,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - run: |
-          flyctl apps destroy "~~_.starter.name_~~-web-pr-${{ github.event.number }}" --yes
+          flyctl apps destroy "~~_starter.name_~~-web-pr-${{ github.event.number }}" --yes
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
@@ -375,7 +375,7 @@ jobs:
   deploy-web-staging:
     environment:
       name: Staging
-      url: https://~~_.starter.name_~~-web-staging.fly.dev
+      url: https://~~_starter.name_~~-web-staging.fly.dev
     runs-on: ubuntu-latest
     concurrency: deploy-web-staging
     needs: staging
@@ -413,7 +413,7 @@ jobs:
   deploy-web:
     environment:
       name: Production
-      url: https://~~_.starter.name_~~-web.fly.dev
+      url: https://~~_starter.name_~~-web.fly.dev
     runs-on: ubuntu-latest
     concurrency: deploy-web
     steps:
@@ -422,7 +422,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - run: |
-          flyctl deploy --config apps/web/fly.production.toml --image-label ~~_.starter.name_~~-web-${{ github.ref_name }} \
+          flyctl deploy --config apps/web/fly.production.toml --image-label ~~_starter.name_~~-web-${{ github.ref_name }} \
             --build-arg VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID="${{ secrets.VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

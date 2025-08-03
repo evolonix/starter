@@ -1,5 +1,14 @@
 #!/usr/bin/env node
 
+/**
+ * Run this script to customize the project files based on the provided
+ * `customize.json` file. It processes all files in the current directory,
+ * replacing placeholders with values from the `customize.json` file.
+ * It also handles cleanup tasks such as renaming files and removing unnecessary directories.
+ *
+ * Usage: `node customize.js`
+ */
+
 const fs = require('fs');
 const fsExtra = require('fs-extra');
 const path = require('path');
@@ -44,23 +53,13 @@ function walk(dir) {
   return files;
 }
 
-// Preprocess template to strip leading dot from keys like `.starter.foo` so they can be used in Mustache
-function preprocess(content) {
-  // Replace ~~_.starter.foo_~~ with ~~_starter.foo_~~ for example.
-  return content.replace(/~~_\s*\.(starter\.[^~\]]+)~~/g, (_, path) => {
-    return `~~_${path}~~`;
-  });
-}
-
 // Process and render a file
 function processFile(filePath) {
   console.log(`Processing file: ${filePath}`);
 
   const content = fs.readFileSync(filePath, 'utf8');
-  const preprocessed = preprocess(content);
-
   const rendered = mustache.render(
-    preprocessed,
+    content,
     { starter },
     {},
     {

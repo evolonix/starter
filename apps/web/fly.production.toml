@@ -1,7 +1,7 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = '~~_.starter.name_~~-web'
+app = '~~_starter.name_~~-web'
 primary_region = 'iad'
 
 [build]

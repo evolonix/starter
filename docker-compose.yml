@@ -6,7 +6,7 @@
 services:
   web:
     image: web:dev
-    container_name: ~~_.starter.name_~~-web-dev
+    container_name: ~~_starter.name_~~-web-dev
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile

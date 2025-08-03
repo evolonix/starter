@@ -5,7 +5,7 @@ Install the flyctl CLI tool and set up your Fly.io account and app:
 ```bash
 brew install flyctl
 flyctl auth login
-flyctl launch --org ~~_.starter.name_~~ --name ~~_.starter.name_~~-web --no-deploy
+flyctl launch --org ~~_starter.name_~~ --name ~~_starter.name_~~-web --no-deploy
 mv fly.toml apps/web/fly.production.toml
 rm -rf Dockerfile
 rm -rf .github/workflows/fly-deploy.yml
@@ -29,7 +29,7 @@ Update [apps/web/fly.production.toml](../../apps/web/fly.production.toml) with t
 Create a Fly.io config for Staging by running the following:
 
 ```bash
-flyctl launch --org ~~_.starter.name_~~ --name ~~_.starter.name_~~-web-staging --no-deploy
+flyctl launch --org ~~_starter.name_~~ --name ~~_starter.name_~~-web-staging --no-deploy
 mv fly.toml apps/web/fly.staging.toml
 rm -rf Dockerfile
 rm -rf .github/workflows/fly-deploy.yml
@@ -80,7 +80,7 @@ Update [apps/web/package.json](../../apps/web/package.json) with the following:
         "command": "YELLOW='\\033[0;33m' RESET='\\033[0m'; echo \"${YELLOW}Development deployment is not supported.${RESET}\"",
         "configurations": {
           "production": {
-            "command": "flyctl deploy --config apps/web/fly.production.toml --image-label ~~_.starter.name_~~-web-v$(npm --prefix apps/web pkg get version | tr -d '\"')"
+            "command": "flyctl deploy --config apps/web/fly.production.toml --image-label ~~_starter.name_~~-web-v$(npm --prefix apps/web pkg get version | tr -d '\"')"
           },
           "staging": {
             "command": "flyctl deploy --config apps/web/fly.staging.toml"
@@ -96,7 +96,7 @@ Update [apps/web/package.json](../../apps/web/package.json) with the following:
 ```
 
 In a browser, visit the [Fly.io dashboard](https://fly.io/dashboard).
-Create or select the `~~_.starter.displayName_~~` organization.
+Create or select the `~~_starter.displayName_~~` organization.
 Scroll down and select `Tokens`.
 Enter `GitHub` as the `token name` and leave the `expiration` field blank.
 Click `Create Organization Token` and copy the token.

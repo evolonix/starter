@@ -1,4 +1,4 @@
-import { AuthLayout } from '@~~_.starter.name_~~/ui';
+import { AuthLayout } from '@~~_starter.name_~~/ui';
 import { Outlet } from 'react-router';
 
 export function Auth() {

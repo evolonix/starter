@@ -3,7 +3,7 @@
 # Build with:
 # docker build -t web:dev -f apps/web/Dockerfile .
 # Run with:
-# docker run -it --rm -p 4200:4200 --name ~~_.starter.name_~~-web-dev --label com.docker.compose.project=~~_.starter.name_~~ web:dev
+# docker run -it --rm -p 4200:4200 --name ~~_starter.name_~~-web-dev --label com.docker.compose.project=~~_starter.name_~~ web:dev
 
 # Adjust NODE_VERSION as desired
 ARG NODE_VERSION=23.6.0

@@ -12,15 +12,27 @@ import {
   FeatureFlagProvider,
   FeatureFlags,
   FeatureFlagToggleDialog,
-} from '@~~_.starter.name_~~/feature-flags';
+} from '@~~_starter.name_~~/feature-flags';
 
 import '../styles.css';
 
 export const meta: MetaFunction = () => [
   {
-    title: '~~_.starter.displayName_~~',
-    description: '~~_.starter.description_~~',
-    author: '~~_.starter.author_~~',
+    title: '~~_starter.displayName_~~',
+    description: '~~_starter.description_~~',
+    author: '~~_starter.author_~~',
+  },
+  {
+    name: 'theme-color',
+    content: '#18181b',
+  },
+  {
+    name: 'mobile-web-app-capable',
+    content: 'yes',
+  },
+  {
+    name: 'apple-mobile-web-app-status-bar-style',
+    content: 'black-translucent',
   },
 ];
 

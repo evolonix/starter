@@ -3,7 +3,7 @@ import {
   GridLayout as Layout,
   PageHeader,
   useMediaMinWidth,
-} from '@~~_.starter.name_~~/ui';
+} from '@~~_starter.name_~~/ui';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 

@@ -1,0 +1,12 @@
+{
+  "name": "~~_starter.displayName_~~",
+  "short_name": "~~_starter.displayName_~~",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#18181b",
+  "lang": "en",
+  "scope": "/",
+  "description": "~~_starter.description_~~",
+  "theme_color": "#ffffff",
+  "icons": [{ "src": "apple-touch-icon.png", "sizes": "180x180" }]
+}
