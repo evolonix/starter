@@ -96,7 +96,7 @@ Update [apps/web/package.json](../../apps/web/package.json) with the following:
 ```
 
 In a browser, visit the [Fly.io dashboard](https://fly.io/dashboard).
-Create or select the `~~_starter.displayName_~~` organization.
+Create or select the `~~_starter.display_name_~~` organization.
 Scroll down and select `Tokens`.
 Enter `GitHub` as the `token name` and leave the `expiration` field blank.
 Click `Create Organization Token` and copy the token.

@@ -54,10 +54,10 @@ export const LayoutSidebar = ({ isExpanded = false }: LayoutSidebarProps) => {
         <SidebarItem
           href="/"
           className="lg:mb-2.5"
-          title={isExpanded ? undefined : '~~_starter.displayName_~~'}
+          title={isExpanded ? undefined : '~~_starter.display_name_~~'}
         >
           <Logo />
-          <SidebarLabel>~~_starter.displayName_~~</SidebarLabel>
+          <SidebarLabel>~~_starter.display_name_~~</SidebarLabel>
         </SidebarItem>
         <SidebarSection className="max-lg:hidden">
           <SidebarItem

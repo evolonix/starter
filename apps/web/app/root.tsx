@@ -18,7 +18,7 @@ import '../styles.css';
 
 export const meta: MetaFunction = () => [
   {
-    title: '~~_starter.displayName_~~',
+    title: '~~_starter.display_name_~~',
     description: '~~_starter.description_~~',
     author: '~~_starter.author_~~',
   },
