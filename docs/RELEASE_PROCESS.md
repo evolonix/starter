@@ -4,7 +4,7 @@
 
 ### Preview
 
-- Triggered by PR to `dev` branch or workflow dispatch
+- Triggered by PR targeting the `main` branch or workflow dispatch
 - Test (lint, unit tests, e2e tests)
 - Build app
 - Deploy to Preview

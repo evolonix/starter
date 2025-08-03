@@ -14,7 +14,7 @@ Update nx.json:
     "codegen": {
       "cache": true,
       "outputs": ["{projectRoot}/src/__generated__"],
-      "inputs": ["{workspaceRoot}/libs/models-graphql/src/lib/schema.graphql", "{projectRoot}/**/*.graphql"],
+      "inputs": ["{projectRoot}/**/*.graphql"],
       "dependsOn": ["^codegen"]
     }
   }
