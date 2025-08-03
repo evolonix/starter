@@ -55,8 +55,6 @@ function walk(dir) {
 
 // Process and render a file
 function processFile(filePath) {
-  console.log(`Processing file: ${filePath}`);
-
   const content = fs.readFileSync(filePath, 'utf8');
   const rendered = mustache.render(
     content,
@@ -68,6 +66,8 @@ function processFile(filePath) {
   );
 
   fs.writeFileSync(filePath, rendered, 'utf8');
+
+  console.log(`✅ Processed file: ${filePath}`);
 }
 
 // Main execution
@@ -86,10 +86,10 @@ function main() {
       fsExtra.removeSync('.github'); // Recursively delete
     }
     fs.renameSync('github', '.github');
-    fs.rmSync('customize.jh', { force: true });
+    fs.rmSync('customize.js', { force: true });
     fs.rmSync('customize.json', { force: true });
   } catch (e) {
-    console.warn('Cleanup warning:', e.message);
+    console.warn('❌ Cleanup warning:', e.message);
   }
 }
 
