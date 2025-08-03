@@ -1,7 +1,7 @@
-# @~[ .starter.name ]~/feature-flags
+# @~~\_.starter.name\_~~/feature-flags
 
 This library was generated with [Nx](https://nx.dev).
 
 ## Running unit tests
 
-Run `nx test @~[ .starter.name ]~/feature-flags` to execute the unit tests via [Vitest](https://vitest.dev/).
+Run `nx test @~~_.starter.name_~~/feature-flags` to execute the unit tests via [Vitest](https://vitest.dev/).

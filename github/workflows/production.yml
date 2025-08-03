@@ -13,19 +13,19 @@ permissions:
   contents: read
 
 jobs:
-  deploy-~[ .starter.name ]~:
+  deploy-~~_.starter.name_~~:
     environment:
       name: Production
-      url: https://~[ .starter.name ]~.fly.dev
+      url: https://~~_.starter.name_~~.fly.dev
     runs-on: ubuntu-latest
-    concurrency: deploy-~[ .starter.name ]~
+    concurrency: deploy-~~_.starter.name_~~
     steps:
       - uses: actions/checkout@v4
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - run: |
-          flyctl deploy --config apps/~[ .starter.name ]~/fly.production.toml --image-label ~[ .starter.name ]~-~[ .starter.name ]~-${{ github.ref_name }} \
+          flyctl deploy --config apps/~~_.starter.name_~~/fly.production.toml --image-label ~~_.starter.name_~~-~~_.starter.name_~~-${{ github.ref_name }} \
           --build-arg VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

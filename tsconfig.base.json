@@ -19,10 +19,10 @@
     "customConditions": ["development"],
     "baseUrl": ".",
     "paths": {
-      "@~[ .starter.name ]~/feature-flags": [
+      "@~~_.starter.name_~~/feature-flags": [
         "libs/features/feature-flags/src/index.ts"
       ],
-      "@~[ .starter.name ]~/ui": ["libs/ui/src/index.ts"]
+      "@~~_.starter.name_~~/ui": ["libs/ui/src/index.ts"]
     }
   }
 }

@@ -1,4 +1,4 @@
-import { PageHeader } from '@~[ .starter.name ]~/ui';
+import { PageHeader } from '@~~_.starter.name_~~/ui';
 
 export const AdminSettings = () => {
   return <PageHeader label="Settings" />;

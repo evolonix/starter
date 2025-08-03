@@ -14,7 +14,7 @@ env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
 jobs:
-  cleanup-~[ .starter.name ]~-preview:
+  cleanup-~~_.starter.name_~~-preview:
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     # Only run one deployment at a time per PR.
@@ -29,7 +29,7 @@ jobs:
       # Check status of app and return output if exists or not
       - id: fly_status
         run: |
-          if flyctl status --app "~[ .starter.name ]~-~[ .starter.name ]~-pr-${{ github.event.number }}"; then
+          if flyctl status --app "~~_.starter.name_~~-~~_.starter.name_~~-pr-${{ github.event.number }}"; then
             echo "exists=true" >> $GITHUB_OUTPUT
           else
             echo "exists=false" >> $GITHUB_OUTPUT
@@ -37,7 +37,7 @@ jobs:
 
       - if: ${{ steps.fly_status.outputs.exists == 'true' }}
         run: |
-          flyctl apps destroy "~[ .starter.name ]~-~[ .starter.name ]~-pr-${{ github.event.number }}" --yes
+          flyctl apps destroy "~~_.starter.name_~~-~~_.starter.name_~~-pr-${{ github.event.number }}" --yes
 
       # If using the name `pr-${{ github.event.number }}` for the environment, you can use this action to delete the environment.
       # - name: Clean up GitHub environment

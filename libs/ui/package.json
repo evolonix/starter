@@ -1,5 +1,5 @@
 {
-  "name": "@~[ .starter.name ]~/ui",
+  "name": "@~~_.starter.name_~~/ui",
   "version": "0.0.1",
   "type": "module",
   "main": "./dist/index.js",

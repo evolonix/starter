@@ -2,7 +2,7 @@ import {
   LayoutNavbar,
   LayoutSidebar,
   SidebarLayout,
-} from '@~[ .starter.name ]~/ui';
+} from '@~~_.starter.name_~~/ui';
 import { Outlet } from 'react-router';
 
 export function App() {

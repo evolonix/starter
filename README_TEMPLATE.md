@@ -1,4 +1,4 @@
-# ~[ .starter.displayName ]~
+# ~~\_.starter.displayName\_~~
 
 To get started with this project, you need to set up a few things.
 

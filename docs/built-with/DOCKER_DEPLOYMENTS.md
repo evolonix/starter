@@ -8,7 +8,7 @@ Create [apps/web/Dockerfile.preview](../../apps/web/Dockerfile.preview) with the
 # Build with:
 # docker build -t web:preview -f apps/web/Dockerfile.preview .
 # Run with:
-# docker run -it --rm -p 3000:3000 --name ~[ .starter.name ]~-web-preview --label com.docker.compose.project=~[ .starter.name ]~ web:preview
+# docker run -it --rm -p 3000:3000 --name ~~_.starter.name_~~-web-preview --label com.docker.compose.project=~~_.starter.name_~~ web:preview
 
 # Adjust NODE_VERSION as desired
 ARG NODE_VERSION=23.6.0
@@ -58,7 +58,7 @@ Create [apps/web/Dockerfile.staging](../../apps/web/Dockerfile.staging) with the
 # Build with:
 # docker build -t web:staging -f apps/web/Dockerfile.staging .
 # Run with:
-# docker run -it --rm -p 3000:3000 --name ~[ .starter.name ]~-web-staging --label com.docker.compose.project=~[ .starter.name ]~ web:staging
+# docker run -it --rm -p 3000:3000 --name ~~_.starter.name_~~-web-staging --label com.docker.compose.project=~~_.starter.name_~~ web:staging
 
 # Adjust NODE_VERSION as desired
 ARG NODE_VERSION=23.6.0
@@ -110,7 +110,7 @@ Create [apps/web/Dockerfile.production](../../apps/web/Dockerfile.production) wi
 # Build with:
 # docker build -t web:v$(npm --prefix apps/web pkg get version | tr -d '\"') -f apps/web/Dockerfile.production .
 # Run with:
-# docker run -it --rm -p 3000:3000 --name ~[ .starter.name ]~-web-production --label com.docker.compose.project=~[ .starter.name ]~ web:v$(npm --prefix apps/web pkg get version | tr -d '\"')
+# docker run -it --rm -p 3000:3000 --name ~~_.starter.name_~~-web-production --label com.docker.compose.project=~~_.starter.name_~~ web:v$(npm --prefix apps/web pkg get version | tr -d '\"')
 
 # Adjust NODE_VERSION as desired
 ARG NODE_VERSION=23.6.0
