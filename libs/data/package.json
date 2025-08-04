@@ -1,0 +1,74 @@
+{
+  "name": "@~~_starter.org_name_~~/data",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "nx": {
+    "name": "data",
+    "targets": {
+      "prisma": {
+        "command": "prisma",
+        "options": {
+          "cwd": "libs/data"
+        }
+      },
+      "setup": {
+        "executor": "nx:run-commands",
+        "options": {
+          "commands": [
+            {
+              "command": "prisma migrate deploy"
+            },
+            {
+              "command": "prisma generate"
+            },
+            {
+              "command": "prisma db seed"
+            }
+          ],
+          "cwd": "libs/data",
+          "parallel": false
+        }
+      },
+      "deploy": {
+        "executor": "nx:run-commands",
+        "options": {
+          "commands": [
+            {
+              "command": "prisma migrate deploy"
+            },
+            {
+              "command": "prisma generate"
+            }
+          ],
+          "cwd": "libs/data",
+          "parallel": false
+        }
+      },
+      "generate-types": {
+        "command": "prisma generate",
+        "options": {
+          "cwd": "libs/data"
+        }
+      },
+      "migrate": {
+        "command": "prisma migrate dev",
+        "options": {
+          "cwd": "libs/data"
+        }
+      },
+      "reset": {
+        "command": "prisma migrate reset",
+        "options": {
+          "cwd": "libs/data"
+        }
+      }
+    }
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}

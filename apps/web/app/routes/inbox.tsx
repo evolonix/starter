@@ -1,4 +1,4 @@
-import { PageHeader } from '@~~_starter.name_~~/ui';
+import { PageHeader } from '@~~_starter.org_name_~~/ui';
 
 export const Inbox = () => {
   return <PageHeader label="Inbox" />;

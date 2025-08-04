@@ -1,13 +1,20 @@
 # syntax = docker/dockerfile:1
 
 # Build with:
-# docker build -t web:preview -f apps/web/Dockerfile.preview .
+# docker build -t ~~_starter.name_~~:preview -f apps/web/Dockerfile.preview .
 # Run with:
-# docker run -it --rm -p 3000:3000 --name ~~_starter.name_~~-web-preview --label com.docker.compose.project=~~_starter.name_~~ web:preview
+# docker run -it --rm -p 3000:3000 --name ~~_starter.name_~~-~~_starter.name_~~-preview --label com.docker.compose.project=~~_starter.name_~~ ~~_starter.name_~~:preview
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=23.6.0
+ARG NODE_VERSION=24.5.0
 FROM node:${NODE_VERSION}-slim AS base
+
+# Install Python and pip, clean up apt cache
+RUN apt-get update && apt-get install -y python3 python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install LiteFS dependencies
+RUN apt-get update -y && apt-get install -y ca-certificates fuse3 sqlite3
 
 # Node.js app lives here
 WORKDIR /app
@@ -27,6 +34,8 @@ RUN npm install --ignore-scripts
 ARG VITE_FLAGSMITH_ENVIRONMENT_ID
 ENV VITE_FLAGSMITH_ENVIRONMENT_ID=$VITE_FLAGSMITH_ENVIRONMENT_ID
 ENV NODE_ENV="preview"
+# Not sure why, but this is needed for Nx graph to work
+ENV NX_DAEMON=false
 
 # Build the application
 RUN npx nx build web --mode preview
@@ -40,6 +49,9 @@ COPY --from=build /app/apps/web/package.json /app
 COPY --from=build /app/apps/web/build /app/build
 RUN npm install --omit=dev
 
+COPY --from=build /app/node_modules/.prisma /app/node_modules/.prisma
+COPY --from=build /app/libs/data/prisma /app/prisma
+
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD [ "npx", "react-router-serve", "build/server/index.js" ]
+CMD [ "npm", "run", "start:preview" ]

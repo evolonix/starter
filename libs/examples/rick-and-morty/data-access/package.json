@@ -17,7 +17,10 @@
   "nx": {
     "targets": {
       "codegen": {
-        "command": "npx graphql-codegen --config {projectRoot}/codegen.ts"
+        "command": "graphql-codegen --config {projectRoot}/codegen.ts"
+      },
+      "codegen-watch": {
+        "command": "graphql-codegen --config {projectRoot}/codegen.ts --watch"
       }
     }
   }

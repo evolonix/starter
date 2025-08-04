@@ -1,38 +1,68 @@
 {
-  "name": "@~~_starter.name_~~/web",
+  "name": "@~~_starter.org_name_~~/~~_starter.name_~~",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "prestart:preview": "prisma migrate reset --force",
+    "start:preview": "npx react-router-serve build/server/index.js",
+    "prestart": "prisma migrate deploy && prisma generate",
+    "start": "npx react-router-serve build/server/index.js"
+  },
   "sideEffects": false,
   "dependencies": {
+    "@apollo/client": "^3.13.9",
+    "@conform-to/react": "^1.8.2",
+    "@conform-to/zod": "^1.8.2",
+    "@epic-web/remember": "^1.1.0",
+    "@headlessui/react": "^2.2.7",
+    "@heroicons/react": "^2.2.0",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "@prisma/client": "^6.13.0",
     "@react-router/node": "^7.2.0",
     "@react-router/serve": "^7.2.0",
+    "bcryptjs": "^3.0.2",
+    "clsx": "^2.1.1",
+    "flagsmith": "^9.3.0",
+    "framer-motion": "^12.23.12",
+    "graphql": "^16.11.0",
+    "immer": "^10.1.1",
     "isbot": "^4.4.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router": "^7.2.0",
+    "remix-auth": "^4.2.0",
+    "remix-utils": "^8.8.0",
+    "rxjs": "^7.8.0",
     "tailwindcss": "^4.1.11",
-    "@headlessui/react": "^2.2.7",
-    "@heroicons/react": "^2.2.0",
-    "clsx": "^2.1.1",
-    "framer-motion": "^12.23.12",
-    "flagsmith": "^9.3.0",
-    "@conform-to/react": "^1.8.2",
-    "@conform-to/zod": "^1.8.2",
     "zod": "^3.25.76",
-    "immer": "^10.1.1",
-    "zustand": "^5.0.7",
-    "@apollo/client": "^3.13.9",
-    "graphql": "^16.11.0"
+    "@simplewebauthn/browser": "^13.1.2",
+    "@simplewebauthn/server": "^13.1.2",
+    "@tusbar/cache-control": "^1.0.2",
+    "spin-delay": "^2.0.1",
+    "@oslojs/crypto": "^1.0.1",
+    "@remix-run/file-storage": "^0.9.0",
+    "@remix-run/form-data-parser": "^0.10.1",
+    "tailwind-merge": "^3.3.1",
+    "mustache": "^4.2.0",
+    "prisma": "^6.13.0",
+    "tsx": "^4.20.3",
+    "@faker-js/faker": "^9.9.0"
   },
   "devDependencies": {
     "@react-router/dev": "^7.2.0",
-    "@types/node": "^20.0.0",
+    "@types/node": "^24.2.0",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0"
   },
   "nx": {
+    "name": "web",
     "targets": {
+      "build": {
+        "dependsOn": [
+          "data:generate-types"
+        ]
+      },
       "docker-build": {
         "command": "docker build -t web:dev -f apps/web/Dockerfile .",
         "configurations": {
@@ -51,7 +81,7 @@
         "command": "YELLOW='\\033[0;33m' RESET='\\033[0m'; echo \"${YELLOW}Development deployment is not supported.${RESET}\"",
         "configurations": {
           "production": {
-            "command": "flyctl deploy --config apps/web/fly.production.toml --image-label ~~_starter.name_~~-web-v$(npm --prefix apps/web pkg get version | tr -d '\"')"
+            "command": "flyctl deploy --config apps/web/fly.production.toml --image-label ~~_starter.name_~~-~~_starter.name_~~-v$(npm --prefix apps/web pkg get version | tr -d '\"')"
           },
           "staging": {
             "command": "flyctl deploy --config apps/web/fly.staging.toml"
@@ -63,5 +93,7 @@
       }
     }
   },
-  "version": "0.0.0"
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
 }

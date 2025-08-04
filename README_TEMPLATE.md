@@ -47,6 +47,50 @@ Create three environments in your GitHub repository:
 3. **Production**: For production deployments.
    Restrict to the `v*.*.*` tag under `Deployment branches and tags`
 
+Now, create the Fly.io apps for each environment:
+
+```bash
+fly apps create ~~_starter.org_name_~~-~~_starter.name_~~
+fly apps create ~~_starter.org_name_~~-~~_starter.name_~~-staging
+```
+
+Next, add secrets to the fly app by running the following commands:
+
+```bash
+fly secrets set SESSION_SECRET=$(openssl rand -hex 32) ALLOW_INDEXING="false" HONEYPOT_SECRET=$(openssl rand -hex 32) --app ~~_starter.org_name_~~-~~_starter.name_~~
+fly secrets set SESSION_SECRET=$(openssl rand -hex 32) ALLOW_INDEXING="false" HONEYPOT_SECRET=$(openssl rand -hex 32) --app ~~_starter.org_name_~~-~~_starter.name_~~-staging
+```
+
+Now, create the database for each environment:
+
+```bash
+fly volumes create data --region iad --size 1 --app ~~_starter.org_name_~~-~~_starter.name_~~ --yes
+fly volumes create data --region iad --size 1 --app ~~_starter.org_name_~~-~~_starter.name_~~-staging --yes
+```
+
+Consul is a fly-managed service that manages your primary instance for data replication. Attach it with the following commands:
+
+```bash
+fly consul attach --app ~~_starter.org_name_~~-~~_starter.name_~~
+fly consul attach --app ~~_starter.org_name_~~-~~_starter.name_~~-staging
+```
+
+Connect to your databases to manage the data using the following commands for each environment, each in a separate terminal:
+
+Production:
+
+```bash
+fly ssh console -C 'npx prisma studio' --app ~~_starter.org_name_~~-~~_starter.name_~~
+fly proxy 5556:5555 --app ~~_starter.org_name_~~-~~_starter.name_~~
+```
+
+Staging:
+
+```bash
+fly ssh console -C 'npx prisma studio' --app ~~_starter.org_name_~~-~~_starter.name_~~-staging
+fly proxy 5556:5555 --app ~~_starter.org_name_~~-~~_starter.name_~~-staging
+```
+
 ## Flagsmith
 
 In a browser, visit the [Flagsmith](https://flagsmith.com/) website and sign up for a free account.
@@ -60,7 +104,7 @@ Create the following environments:
 - **Staging**: This environment is used for staging deployments.
 - **Production**: This environment is used for production deployments.
 
-You will need the environment ID from each environment to configure your application.
+You will need the environment ID from each environment to configure your application. The environment IDs can be found as the `Client-side Environment Key` under `SDK Keys`.
 
 In your GitHub repository, go to `Settings` > `Secrets and variables` > `Actions` > `Manage environment secrets`.
 Create the following secrets for each environment:

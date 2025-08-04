@@ -8,10 +8,10 @@ Create [apps/web/Dockerfile](../../apps/web/Dockerfile) with the following to be
 # Build with:
 # docker build -t web:dev -f apps/web/Dockerfile .
 # Run with:
-# docker run -it --rm -p 4200:4200 --name ~~_starter.name_~~-web-dev --label com.docker.compose.project=~~_starter.name_~~ web:dev
+# docker run -it --rm -p 4200:4200 --name ~~_starter.org_name_~~-~~_starter.name_~~-dev --label com.docker.compose.project=~~_starter.org_name_~~ ~~_starter.name_~~:dev
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=23.6.0
+ARG NODE_VERSION=24.5.0
 FROM node:${NODE_VERSION}-slim AS base
 
 # Node.js app lives here
@@ -45,7 +45,7 @@ Create [docker-compose.yml](../../docker-compose.yml) with the following to be u
 services:
   web:
     image: web:dev
-    container_name: ~~_starter.name_~~-web-dev
+    container_name: ~~_starter.org_name_~~-~~_starter.name_~~-dev
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile

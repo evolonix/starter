@@ -1,10 +1,11 @@
 {
-  "name": "@~~_starter.name_~~/web-e2e",
+  "name": "@~~_starter.org_name_~~/~~_starter.name_~~-e2e",
   "version": "0.0.1",
   "private": true,
   "nx": {
+    "name": "web-e2e",
     "implicitDependencies": [
-      "@~~_starter.name_~~/web"
+      "web"
     ]
   }
 }

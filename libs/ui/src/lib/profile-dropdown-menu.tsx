@@ -1,7 +1,18 @@
 import { MenuItemsProps } from '@headlessui/react';
-import { ArrowRightStartOnRectangleIcon, Cog8ToothIcon, LightBulbIcon, ShieldCheckIcon, UserIcon } from '@heroicons/react/16/solid';
+import {
+  ArrowRightStartOnRectangleIcon,
+  Cog8ToothIcon,
+  LightBulbIcon,
+  ShieldCheckIcon,
+  UserIcon,
+} from '@heroicons/react/16/solid';
 
-import { DropdownDivider, DropdownItem, DropdownLabel, DropdownMenu } from './catalyst';
+import {
+  DropdownDivider,
+  DropdownItem,
+  DropdownLabel,
+  DropdownMenu,
+} from './catalyst';
 
 export interface ProfileMenuProps {
   anchor?: MenuItemsProps['anchor'];
@@ -16,7 +27,7 @@ export const ProfileDropdownMenu = ({ anchor }: ProfileMenuProps) => {
       </DropdownItem>
       <DropdownItem href="/settings">
         <Cog8ToothIcon />
-        <DropdownLabel>My Settings</DropdownLabel>
+        <DropdownLabel>My settings</DropdownLabel>
       </DropdownItem>
       <DropdownDivider />
       <DropdownItem href="/privacy">

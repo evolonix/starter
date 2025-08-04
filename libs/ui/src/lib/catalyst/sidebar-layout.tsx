@@ -9,6 +9,8 @@ import { Outlet } from 'react-router';
 import { Button } from './button';
 import { NavbarItem } from './navbar';
 
+const LOCAL_STORAGE_KEY = '~~_starter.name_~~_sidebar_expanded';
+
 function OpenMenuIcon() {
   return (
     <svg data-slot="icon" viewBox="0 0 20 20" aria-hidden="true">
@@ -68,7 +70,7 @@ export function SidebarLayout({
 
   const handleToggleSidebar = () => {
     setIsExpanded((prev) => !prev);
-    localStorage.setItem('sidebarExpanded', String(!isExpanded));
+    localStorage.setItem(LOCAL_STORAGE_KEY, String(!isExpanded));
   };
 
   // Set isExpanded prop for sidebar
@@ -86,7 +88,7 @@ export function SidebarLayout({
   useEffect(() => {
     setIsClient(true);
 
-    const isExpanded = localStorage.getItem('sidebarExpanded');
+    const isExpanded = localStorage.getItem(LOCAL_STORAGE_KEY);
     setIsExpanded(isExpanded === 'true' || isExpanded === null);
   }, []);
 

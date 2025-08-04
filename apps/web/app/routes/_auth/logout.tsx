@@ -1,27 +1,23 @@
-import { useForm } from '@conform-to/react';
+import { getFormProps, useForm } from '@conform-to/react';
 
-import { Button, Heading, Link, Logo } from '@~~_starter.name_~~/ui';
+import { Button, Heading, Link, Logo } from '@~~_starter.org_name_~~/ui';
+import { ActionFunctionArgs, Form } from 'react-router';
+import { logout } from '../../utils/auth.server';
+
+export async function action({ request }: ActionFunctionArgs) {
+  return logout({ request });
+}
 
 export const Logout = () => {
   const [form] = useForm({
-    onSubmit(e, { formData }) {
-      e.preventDefault();
-
-      const data: { [key: string]: string } = {};
-      formData.forEach((value, key) => {
-        data[key] = value.toString();
-      });
-      console.log('Form submitted:', data);
-    },
+    id: 'logout-form',
   });
 
   return (
-    <form
-      id={form.id}
+    <Form
       method="POST"
       className="grid w-full max-w-sm grid-cols-1 gap-8"
-      noValidate={form.noValidate}
-      onSubmit={form.onSubmit}
+      {...getFormProps(form)}
     >
       <Link
         href="/"
@@ -34,7 +30,7 @@ export const Logout = () => {
       <Button type="submit" className="w-full">
         Logout
       </Button>
-    </form>
+    </Form>
   );
 };
 

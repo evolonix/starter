@@ -52,3 +52,7 @@ test-output
 !.env.example
 
 __generated__
+
+**/prisma/dev.db
+
+_data/

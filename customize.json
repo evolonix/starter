@@ -2,5 +2,7 @@
   "name": "starter",
   "display_name": "Starter",
   "description": "A starter template for new projects",
-  "author": "Jason Ruesch"
+  "author": "Jason Ruesch",
+  "org_name": "evolonix",
+  "org_display_name": "Evolonix"
 }

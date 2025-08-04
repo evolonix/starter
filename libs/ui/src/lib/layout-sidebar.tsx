@@ -1,24 +1,28 @@
 import {
   ChevronUpIcon,
+  CodeBracketIcon,
   Cog6ToothIcon,
   HomeIcon,
   InboxIcon,
   MagnifyingGlassIcon,
   QuestionMarkCircleIcon,
   SparklesIcon,
+  UsersIcon,
 } from '@heroicons/react/16/solid';
 import clsx from 'clsx';
+import { useCallback } from 'react';
 import { useLocation } from 'react-router';
 
-import { useCallback } from 'react';
 import {
   Avatar,
   Dropdown,
   DropdownButton,
   Sidebar,
   SidebarBody,
+  SidebarDivider,
   SidebarFooter,
   SidebarHeader,
+  SidebarHeading,
   SidebarItem,
   SidebarLabel,
   SidebarSection,
@@ -29,9 +33,19 @@ import { ProfileDropdownMenu } from './profile-dropdown-menu';
 
 export interface LayoutSidebarProps {
   isExpanded?: boolean;
+  user?: { name: string; email: string } | null;
+  avatarUrl?: string;
+  isDeveloper?: boolean;
+  isAdmin?: boolean;
 }
 
-export const LayoutSidebar = ({ isExpanded = false }: LayoutSidebarProps) => {
+export const LayoutSidebar = ({
+  isExpanded = false,
+  user,
+  avatarUrl,
+  isDeveloper = false,
+  isAdmin = false,
+}: LayoutSidebarProps) => {
   const { pathname } = useLocation();
 
   const isCurrent = useCallback(
@@ -88,9 +102,49 @@ export const LayoutSidebar = ({ isExpanded = false }: LayoutSidebarProps) => {
             <HomeIcon />
             <SidebarLabel>Home</SidebarLabel>
           </SidebarItem>
+          <SidebarItem
+            href="/users"
+            title={isExpanded ? undefined : 'Users'}
+            current={isCurrent('/users')}
+          >
+            <UsersIcon />
+            <SidebarLabel>Users</SidebarLabel>
+          </SidebarItem>
         </SidebarSection>
         <SidebarSpacer />
-        <SidebarSection>
+        <SidebarSection hidden={!isDeveloper}>
+          <SidebarHeading
+            isExpanded={isExpanded}
+            initials="D"
+            aria-label="Developer"
+          >
+            Developer
+          </SidebarHeading>
+          <SidebarItem
+            href="/cdk"
+            title={isExpanded ? undefined : 'CDK'}
+            current={isCurrent('/cdk')}
+          >
+            <CodeBracketIcon />
+            <SidebarLabel>CDK</SidebarLabel>
+          </SidebarItem>
+        </SidebarSection>
+        <SidebarSection hidden={!isAdmin}>
+          <SidebarHeading
+            isExpanded={isExpanded}
+            initials="A"
+            aria-label="Admin"
+          >
+            Admin
+          </SidebarHeading>
+          <SidebarItem
+            href="/admin/users"
+            title={isExpanded ? undefined : 'Users'}
+            current={isCurrent('/admin/users')}
+          >
+            <UsersIcon />
+            <SidebarLabel>Users</SidebarLabel>
+          </SidebarItem>
           <SidebarItem
             href="/admin/settings"
             title={isExpanded ? undefined : 'Settings'}
@@ -99,6 +153,9 @@ export const LayoutSidebar = ({ isExpanded = false }: LayoutSidebarProps) => {
             <Cog6ToothIcon />
             <SidebarLabel>Settings</SidebarLabel>
           </SidebarItem>
+        </SidebarSection>
+        <SidebarDivider />
+        <SidebarSection>
           <SidebarItem
             href="/support"
             title={isExpanded ? undefined : 'Support'}
@@ -126,22 +183,22 @@ export const LayoutSidebar = ({ isExpanded = false }: LayoutSidebarProps) => {
         <Dropdown>
           <DropdownButton
             as={SidebarItem}
-            title={isExpanded ? undefined : 'Erica <erica@example.com>'}
+            title={isExpanded ? undefined : `${user?.name} <${user?.email}>`}
           >
             <span className="flex min-w-0 items-center gap-3">
               <Avatar
-                // src="/profile-photo.jpg"
-                initials={'Erica'.charAt(0)}
+                src={avatarUrl}
+                initials={user?.name?.charAt(0)}
                 className="size-10"
                 square
-                alt=""
+                alt={user?.name}
               />
               <span className="min-w-0">
                 <span className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">
-                  Erica
+                  {user?.name}
                 </span>
                 <span className="block truncate text-xs/5 font-normal text-zinc-600 dark:text-zinc-400">
-                  erica@example.com
+                  {user?.email}
                 </span>
               </span>
             </span>

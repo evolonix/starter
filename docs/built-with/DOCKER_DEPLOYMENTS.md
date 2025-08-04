@@ -8,10 +8,10 @@ Create [apps/web/Dockerfile.preview](../../apps/web/Dockerfile.preview) with the
 # Build with:
 # docker build -t web:preview -f apps/web/Dockerfile.preview .
 # Run with:
-# docker run -it --rm -p 3000:3000 --name ~~_starter.name_~~-web-preview --label com.docker.compose.project=~~_starter.name_~~ web:preview
+# docker run -it --rm -p 3000:3000 --name ~~_starter.org_name_~~-~~_starter.name_~~-preview --label com.docker.compose.project=~~_starter.org_name_~~ ~~_starter.name_~~:preview
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=23.6.0
+ARG NODE_VERSION=24.5.0
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="Node.js"
@@ -58,10 +58,10 @@ Create [apps/web/Dockerfile.staging](../../apps/web/Dockerfile.staging) with the
 # Build with:
 # docker build -t web:staging -f apps/web/Dockerfile.staging .
 # Run with:
-# docker run -it --rm -p 3000:3000 --name ~~_starter.name_~~-web-staging --label com.docker.compose.project=~~_starter.name_~~ web:staging
+# docker run -it --rm -p 3000:3000 --name ~~_starter.org_name_~~-~~_starter.name_~~-staging --label com.docker.compose.project=~~_starter.org_name_~~ ~~_starter.name_~~:staging
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=23.6.0
+ARG NODE_VERSION=24.5.0
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="Node.js"
@@ -110,10 +110,10 @@ Create [apps/web/Dockerfile.production](../../apps/web/Dockerfile.production) wi
 # Build with:
 # docker build -t web:v$(npm --prefix apps/web pkg get version | tr -d '\"') -f apps/web/Dockerfile.production .
 # Run with:
-# docker run -it --rm -p 3000:3000 --name ~~_starter.name_~~-web-production --label com.docker.compose.project=~~_starter.name_~~ web:v$(npm --prefix apps/web pkg get version | tr -d '\"')
+# docker run -it --rm -p 3000:3000 --name ~~_starter.org_name_~~-~~_starter.name_~~-production --label com.docker.compose.project=~~_starter.org_name_~~ ~~_starter.name_~~:v$(npm --prefix apps/web pkg get version | tr -d '\"')
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=23.6.0
+ARG NODE_VERSION=24.5.0
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="Node.js"

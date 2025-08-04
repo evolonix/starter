@@ -1,22 +1,30 @@
 import {
+  data,
   Links,
+  LoaderFunctionArgs,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
   type LinksFunction,
   type MetaFunction,
 } from 'react-router';
+import { HoneypotProvider } from 'remix-utils/honeypot/react';
 
 import {
   FeatureFlagProvider,
   FeatureFlags,
   FeatureFlagToggleDialog,
-} from '@~~_starter.name_~~/feature-flags';
+} from '@~~_starter.org_name_~~/feature-flags';
 
+import { GeneralErrorBoundary } from '@~~_starter.org_name_~~/ui';
 import stylesheetUrl from '../styles.css?url';
 import appleTouchIconAssetUrl from './assets/apple-touch-icon.png';
 import faviconAssetUrl from './assets/favicon.svg';
+import { getUserId, logout } from './utils/auth.server';
+import { prisma } from './utils/db.server';
+import { honeypot } from './utils/honeypot.server';
 
 export const meta: MetaFunction = () => [
   {
@@ -63,6 +71,42 @@ export const links: LinksFunction = () => [
   },
 ];
 
+export async function loader({ request }: LoaderFunctionArgs) {
+  const userId = await getUserId(request);
+  const user = userId
+    ? await prisma.user.findUnique({
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          updatedAt: true,
+          image: true,
+          roles: {
+            include: {
+              permissions: true,
+            },
+          },
+        },
+        where: { id: userId },
+      })
+    : null;
+
+  if (userId && !user) {
+    console.info('something weird happened');
+    // something weird happened... The user is authenticated but we can't find
+    // them in the database. Maybe they were deleted? Let's log them out.
+    await logout({ request, redirectTo: '/' });
+  }
+
+  const honeyProps = await honeypot.getInputProps();
+
+  return data({
+    user,
+    honeyProps,
+  });
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -87,14 +131,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
 const initialFlags: FeatureFlags = {};
 
 export default function App() {
+  const { honeyProps } = useLoaderData<typeof loader>();
+
   return (
     <FeatureFlagProvider
       flagsmithEnvironmentId={import.meta.env.VITE_FLAGSMITH_ENVIRONMENT_ID}
       initialFlags={initialFlags}
     >
-      <Outlet />
+      <HoneypotProvider {...honeyProps}>
+        <Outlet />
+      </HoneypotProvider>
 
       <FeatureFlagToggleDialog />
     </FeatureFlagProvider>
   );
 }
+
+export const ErrorBoundary = GeneralErrorBoundary;

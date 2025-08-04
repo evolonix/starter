@@ -3,7 +3,7 @@ import {
   GridLayoutItem,
   PageHeader,
   Search as UiSearch,
-} from '@~~_starter.name_~~/ui';
+} from '@~~_starter.org_name_~~/ui';
 
 export const Search = () => {
   return (

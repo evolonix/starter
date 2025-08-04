@@ -3,7 +3,7 @@ import {
   GridLayout as Layout,
   PageHeader,
   useMediaMinWidth,
-} from '@~~_starter.name_~~/ui';
+} from '@~~_starter.org_name_~~/ui';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
@@ -34,7 +34,7 @@ export const GridLayout = () => {
 
   return (
     <>
-      <PageHeader label="Grid Layout" />
+      <PageHeader label="Grid layout" />
       <Layout>
         {lg ? (
           <>
