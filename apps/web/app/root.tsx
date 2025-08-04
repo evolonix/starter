@@ -14,13 +14,21 @@ import {
   FeatureFlagToggleDialog,
 } from '@~~_starter.name_~~/feature-flags';
 
-import '../styles.css';
+import stylesheetUrl from '../styles.css?url';
+import appleTouchIconAssetUrl from './assets/apple-touch-icon.png';
+import faviconAssetUrl from './assets/favicon.svg';
 
 export const meta: MetaFunction = () => [
   {
     title: '~~_starter.display_name_~~',
-    description: '~~_starter.description_~~',
-    author: '~~_starter.author_~~',
+  },
+  {
+    name: 'description',
+    content: '~~_starter.description_~~',
+  },
+  {
+    name: 'author',
+    content: '~~_starter.author_~~',
   },
   {
     name: 'theme-color',
@@ -42,16 +50,16 @@ export const links: LinksFunction = () => [
     href: '/favicon.ico',
     sizes: '32x32',
   },
-  // <!-- icon: 512x512 -->
+  { rel: 'icon', type: 'image/svg+xml', href: faviconAssetUrl },
+  { rel: 'apple-touch-icon', href: appleTouchIconAssetUrl },
   {
-    rel: 'icon',
-    href: '/icon.svg',
-    type: 'image/svg+xml',
+    rel: 'manifest',
+    href: '/manifest.webmanifest',
+    crossOrigin: 'use-credentials',
   },
-  // <!-- apple-touch-icon: 180×180 -->
   {
-    rel: 'apple-touch-icon',
-    href: '/apple-touch-icon.png',
+    rel: 'stylesheet',
+    href: stylesheetUrl,
   },
 ];
 
