@@ -1,5 +1,5 @@
-import { useForm } from '@conform-to/react';
-import { parseWithZod } from '@conform-to/zod';
+import { getFormProps, getInputProps, useForm } from '@conform-to/react';
+import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import { z } from 'zod';
 
 import {
@@ -17,16 +17,76 @@ import {
   Text,
   TextLink,
 } from '@~~_starter.name_~~/ui';
+import {
+  ActionFunctionArgs,
+  data,
+  Form,
+  useActionData,
+  useSearchParams,
+} from 'react-router';
+
+import { login } from '../../utils/auth.server';
+import { handleNewSession } from './login.server';
 
 const schema = z.object({
   email: z
     .string({ required_error: 'Email is required' })
     .email('Invalid email address'),
   password: z.string({ required_error: 'Password is required' }),
+  redirectTo: z.string().optional(),
+  remember: z.boolean().optional(),
 });
 
+export async function action({ request }: ActionFunctionArgs) {
+  // await requireAnonymous(request)
+  const formData = await request.formData();
+  // await checkHoneypot(formData)
+  const submission = await parseWithZod(formData, {
+    schema: (intent) =>
+      schema.transform(async (data, ctx) => {
+        if (intent !== null) return { ...data, session: null };
+
+        const session = await login(data);
+        if (!session) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Invalid email or password',
+          });
+          return z.NEVER;
+        }
+
+        return { ...data, session };
+      }),
+    async: true,
+  });
+
+  if (submission.status !== 'success' || !submission.value.session) {
+    return data(
+      { result: submission.reply({ hideFields: ['password'] }) },
+      { status: submission.status === 'error' ? 400 : 200 },
+    );
+  }
+
+  const { session, remember, redirectTo } = submission.value;
+
+  return handleNewSession({
+    request,
+    session,
+    remember: remember ?? false,
+    redirectTo,
+  });
+}
+
 export const Login = () => {
+  const actionData = useActionData();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get('redirectTo');
+
   const [form, fields] = useForm({
+    id: 'login-form',
+    constraint: getZodConstraint(schema),
+    defaultValue: { redirectTo },
+    lastResult: actionData?.result,
     shouldValidate: 'onSubmit',
     shouldRevalidate: 'onBlur',
     onValidate({ formData }) {
@@ -34,25 +94,15 @@ export const Login = () => {
         schema,
       });
     },
-    onSubmit(e, { formData }) {
-      e.preventDefault();
-
-      const data: { [key: string]: string } = {};
-      formData.forEach((value, key) => {
-        data[key] = value.toString();
-      });
-      console.log('Form submitted:', data);
-    },
   });
 
   return (
-    <form
-      id={form.id}
+    <Form
       method="POST"
       className="grid w-full max-w-sm grid-cols-1 gap-8"
-      noValidate={form.noValidate}
-      onSubmit={form.onSubmit}
+      {...getFormProps(form)}
     >
+      <input {...getInputProps(fields.redirectTo, { type: 'hidden' })} />
       <Link
         href="/"
         className="flex items-center gap-3 text-zinc-950 dark:text-white forced-colors:text-[CanvasText]"
@@ -87,7 +137,7 @@ export const Login = () => {
       </Field>
       <div className="flex items-center justify-between">
         <CheckboxField>
-          <Checkbox name="remember" />
+          <Checkbox name={fields.remember.name} />
           <Label>Remember me</Label>
         </CheckboxField>
         <Text>
@@ -105,7 +155,7 @@ export const Login = () => {
           <Strong>Sign up</Strong>
         </TextLink>
       </Text>
-    </form>
+    </Form>
   );
 };
 

@@ -1,0 +1,41 @@
+{
+  "name": "@~~_starter.name_~~/prisma-schema",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "nx": {
+    "targets": {
+      "prisma": {
+        "command": "prisma",
+        "options": {
+          "cwd": "libs/prisma-schema"
+        }
+      },
+      "generate-types": {
+        "command": "prisma generate",
+        "options": {
+          "cwd": "libs/prisma-schema"
+        }
+      },
+      "migrate": {
+        "command": "prisma migrate dev",
+        "options": {
+          "cwd": "libs/prisma-schema"
+        }
+      },
+      "seed": {
+        "command": "prisma db seed",
+        "options": {
+          "cwd": "libs/prisma-schema"
+        }
+      }
+    }
+  },
+  "dependencies": {},
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}
