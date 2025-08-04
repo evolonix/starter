@@ -1,13 +1,20 @@
 # syntax = docker/dockerfile:1
 
 # Build with:
-# docker build -t web:staging -f apps/web/Dockerfile.staging .
+# docker build -t ~~_starter.name_~~:staging -f apps/web/Dockerfile.staging .
 # Run with:
-# docker run -it --rm -p 3000:3000 --name ~~_starter.name_~~-web-staging --label com.docker.compose.project=~~_starter.name_~~ web:staging
+# docker run -it --rm -p 3000:3000 --name ~~_starter.name_~~-~~_starter.name_~~-staging --label com.docker.compose.project=~~_starter.name_~~ ~~_starter.name_~~:staging
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=23.6.0
+ARG NODE_VERSION=24.5.0
 FROM node:${NODE_VERSION}-slim AS base
+
+# Install Python and pip, clean up apt cache
+RUN apt-get update && apt-get install -y python3 python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install LiteFS dependencies
+RUN apt-get update -y && apt-get install -y ca-certificates fuse3 sqlite3
 
 # Node.js app lives here
 WORKDIR /app
@@ -27,6 +34,8 @@ RUN npm install --ignore-scripts
 ARG VITE_FLAGSMITH_ENVIRONMENT_ID
 ENV VITE_FLAGSMITH_ENVIRONMENT_ID=$VITE_FLAGSMITH_ENVIRONMENT_ID
 ENV NODE_ENV="staging"
+# Not sure why, but this is needed for Nx graph to work
+ENV NX_DAEMON=false
 
 # Build the application
 RUN npx nx build web --mode staging
@@ -40,6 +49,13 @@ COPY --from=build /app/apps/web/package.json /app
 COPY --from=build /app/apps/web/build /app/build
 RUN npm install --omit=dev
 
+COPY --from=build /app/node_modules/.prisma /app/node_modules/.prisma
+COPY --from=build /app/libs/data/prisma /app/prisma
+
+# Prepare for LiteFS
+COPY --from=flyio/litefs:0.5 /usr/local/bin/litefs /usr/local/bin/litefs
+COPY --from=build /app/apps/web/litefs.yml /etc/litefs.yml
+
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD [ "npx", "react-router-serve", "build/server/index.js" ]
+CMD [ "litefs", "mount" ]

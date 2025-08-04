@@ -4,9 +4,9 @@
 # Optionally, use -d to run the app in detached mode
 
 services:
-  web:
-    image: web:dev
-    container_name: ~~_starter.name_~~-web-dev
+  ~~_starter.name_~~:
+    image: ~~_starter.name_~~:dev
+    container_name: ~~_starter.name_~~-~~_starter.name_~~-dev
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile

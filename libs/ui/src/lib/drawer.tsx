@@ -4,9 +4,9 @@ import * as Headless from '@headlessui/react';
 import clsx from 'clsx';
 import type React from 'react';
 import { useRef } from 'react';
-import { NavbarItem, Text } from './catalyst';
+import { Heading, NavbarItem, Text } from './catalyst';
 
-const sizes = {
+export const sizes = {
   xs: 'sm:max-w-xs',
   sm: 'sm:max-w-sm',
   md: 'sm:max-w-md',
@@ -19,7 +19,7 @@ const sizes = {
   full: 'sm:max-w-full',
 };
 
-function CloseMenuIcon() {
+export function CloseMenuIcon() {
   return (
     <svg data-slot="icon" viewBox="0 0 20 20" aria-hidden="true">
       <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
@@ -115,15 +115,13 @@ export function DrawerTitle({
   'children'
 >) {
   return (
-    <h2
+    <Heading
+      level={2}
       {...props}
-      className={clsx(
-        className,
-        'text-lg font-semibold text-zinc-950 dark:text-white',
-      )}
+      className={clsx(className, 'text-zinc-950 dark:text-white')}
     >
       {children}
-    </h2>
+    </Heading>
   );
 }
 

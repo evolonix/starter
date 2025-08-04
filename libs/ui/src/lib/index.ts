@@ -1,7 +1,9 @@
 export * from './catalyst';
 export * from './drawer';
+export * from './general-error-boundary';
 export * from './grid-layout';
 export * from './hooks';
+export * from './image';
 export * from './image-uploader';
 export * from './layout-navbar';
 export * from './layout-sidebar';
@@ -9,4 +11,5 @@ export * from './lipsum';
 export * from './logo';
 export * from './page-header';
 export * from './profile-dropdown-menu';
+export * from './routed-drawer';
 export * from './search';

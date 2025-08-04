@@ -75,7 +75,7 @@ Update [.github/workflows/preview.yml](../../.github/workflows/preview.yml) to i
 
 ```yaml
 - run: |
-    flyctl deploy --config apps/web/fly.preview.toml --app "~~_starter.name_~~-web-pr-${{ github.event.number }}" \
+    flyctl deploy --config apps/web/fly.preview.toml --app "~~_starter.org_name_~~-~~_starter.name_~~-pr-${{ github.event.number }}" \
       --build-arg VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}"
 ```
 
@@ -91,7 +91,7 @@ Update [.github/workflows/production.yml](../../.github/workflows/production.yml
 
 ```yaml
 - run: |
-    flyctl deploy --config apps/web/fly.production.toml --image-label ~~_starter.name_~~-web-${{ github.ref_name }} \
+    flyctl deploy --config apps/web/fly.production.toml --image-label ~~_starter.org_name_~~-~~_starter.name_~~-${{ github.ref_name }} \
       --build-arg VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}"
 ```
 
@@ -114,7 +114,7 @@ Update [tsconfig.base.json](../../tsconfig.base.json) to include the import path
     "baseUrl": ".",
     "paths": {
       ...
-      "@~~_starter.name_~~/feature-flags": ["libs/features/feature-flags/src/index.ts"]
+      "@~~_starter.org_name_~~/feature-flags": ["libs/features/feature-flags/src/index.ts"]
     }
   },
   ...
@@ -194,7 +194,7 @@ import { useLocation, useRouteLoaderData } from 'react-router';
 
 export type FeatureFlags = Record<string, boolean>;
 
-export const LOCAL_STORAGE_KEY = 'featureFlags';
+export const LOCAL_STORAGE_KEY = '~~_starter.name_~~_feature_flags';
 
 // === Context ===
 
@@ -388,7 +388,7 @@ import {
   Label,
   Switch,
   SwitchField,
-} from '@~~_starter.name_~~/ui';
+} from '@~~_starter.org_name_~~/ui';
 import { useEffect, useState } from 'react';
 import { useActionKey } from './action-key.hook';
 import { useFeatureFlags } from './feature-flag-provider';
@@ -516,7 +516,7 @@ import {
   FeatureFlagProvider,
   FeatureFlags,
   FeatureFlagToggleDialog,
-} from '@~~_starter.name_~~/feature-flags';
+} from '@~~_starter.org_name_~~/feature-flags';
 ...
 
 export default function App() {

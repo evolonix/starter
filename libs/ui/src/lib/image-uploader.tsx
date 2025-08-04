@@ -1,115 +1,98 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
-
-const MISSING_IMAGE =
-  'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTYgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0ibSA0IDEgYyAtMS42NDQ1MzEgMCAtMyAxLjM1NTQ2OSAtMyAzIHYgMSBoIDEgdiAtMSBjIDAgLTEuMTA5Mzc1IDAuODkwNjI1IC0yIDIgLTIgaCAxIHYgLTEgeiBtIDIgMCB2IDEgaCA0IHYgLTEgeiBtIDUgMCB2IDEgaCAxIGMgMS4xMDkzNzUgMCAyIDAuODkwNjI1IDIgMiB2IDEgaCAxIHYgLTEgYyAwIC0xLjY0NDUzMSAtMS4zNTU0NjkgLTMgLTMgLTMgeiBtIC01IDQgYyAtMC41NTA3ODEgMCAtMSAwLjQ0OTIxOSAtMSAxIHMgMC40NDkyMTkgMSAxIDEgcyAxIC0wLjQ0OTIxOSAxIC0xIHMgLTAuNDQ5MjE5IC0xIC0xIC0xIHogbSAtNSAxIHYgNCBoIDEgdiAtNCB6IG0gMTMgMCB2IDQgaCAxIHYgLTQgeiBtIC00LjUgMiBsIC0yIDIgbCAtMS41IC0xIGwgLTIgMiB2IDAuNSBjIDAgMC41IDAuNSAwLjUgMC41IDAuNSBoIDcgcyAwLjQ3MjY1NiAtMC4wMzUxNTYgMC41IC0wLjUgdiAtMSB6IG0gLTguNSAzIHYgMSBjIDAgMS42NDQ1MzEgMS4zNTU0NjkgMyAzIDMgaCAxIHYgLTEgaCAtMSBjIC0xLjEwOTM3NSAwIC0yIC0wLjg5MDYyNSAtMiAtMiB2IC0xIHogbSAxMyAwIHYgMSBjIDAgMS4xMDkzNzUgLTAuODkwNjI1IDIgLTIgMiBoIC0xIHYgMSBoIDEgYyAxLjY0NDUzMSAwIDMgLTEuMzU1NDY5IDMgLTMgdiAtMSB6IG0gLTggMyB2IDEgaCA0IHYgLTEgeiBtIDAgMCIgZmlsbD0iIzJlMzQzNCIgZmlsbC1vcGFjaXR5PSIwLjM0OTAyIi8+Cjwvc3ZnPgo=';
+import React, { useRef, useState } from 'react';
+import { Alert, AlertActions, AlertTitle, Button } from './catalyst';
+import { Image } from './image';
 
 interface ImageUploaderProps {
-  name?: string;
-  initialImageUrl?: string;
-  missingImage?: string;
-  onChange?: (url: string) => void;
+  inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+  src?: string;
+  fallbackElement: React.ReactNode;
+  onRemove?: () => void;
 }
 
-export interface ImageUploaderRef {
-  getFile: () => File | null;
-  setUploadedUrl: (url: string) => void;
-}
+export const ImageUploader = ({
+  inputProps,
+  src,
+  fallbackElement,
+  onRemove,
+}: ImageUploaderProps) => {
+  const [imageSrc, setImageSrc] = useState<string | undefined>(src);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [showRemoveAlert, setShowRemoveAlert] = useState(false);
 
-export const ImageUploader = forwardRef<ImageUploaderRef, ImageUploaderProps>(
-  ({ name, initialImageUrl, missingImage, onChange }, ref) => {
-    const [imageSrc, setImageSrc] = useState<string | undefined>(
-      initialImageUrl || missingImage || MISSING_IMAGE,
-    );
-    const [file, setFile] = useState<File | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [isHovered, setIsHovered] = useState(false);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => setImageSrc(reader.result as string);
+      reader.readAsDataURL(file);
+      buttonRef.current?.blur();
+    }
+  };
 
-    useImperativeHandle(ref, () => ({
-      getFile: () => file,
-      setUploadedUrl: (url: string) => {
-        setImageSrc(url);
-        onChange?.(url);
-      },
-    }));
+  const handleUploadClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
+    fileInputRef.current?.click();
+  };
 
-    const handleImageClick = () => {
-      fileInputRef.current?.click();
-    };
+  const handleRemoveImage = () => {
+    setImageSrc(undefined);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    setShowRemoveAlert(false);
+    onRemove?.();
+  };
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          if (reader.result) {
-            setImageSrc(reader.result as string);
-            setFile(file);
-          }
-        };
-        reader.readAsDataURL(file);
-      }
-
-      setIsHovered(false);
-    };
-
-    useEffect(() => {
-      const fileInput = fileInputRef.current;
-
-      const onCancel = () => {
-        setIsHovered(false);
-      };
-
-      fileInput?.addEventListener('cancel', onCancel);
-
-      return () => {
-        fileInput?.removeEventListener('cancel', onCancel);
-      };
-    }, []);
-
-    return (
-      <div className="relative size-48 cursor-pointer overflow-hidden rounded-lg">
-        <div
-          tabIndex={0}
-          onClick={handleImageClick}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') handleImageClick();
-          }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          onFocus={() => setIsHovered(true)}
-          onBlur={() => setIsHovered(false)}
-          className="relative size-full bg-white"
-        >
-          <img
-            src={imageSrc}
-            alt="Uploadable preview"
-            className="h-full w-full object-cover"
-          />
-          {isHovered && (
-            <div className="absolute inset-0 flex items-center justify-center bg-zinc-950/75 text-center text-lg font-bold text-white">
-              Upload an image
-            </div>
-          )}
-        </div>
-
-        <input
-          type="file"
-          accept="image/*"
-          className="hidden"
-          ref={fileInputRef}
-          onChange={handleImageChange}
+  return (
+    <div className="flex flex-col items-center space-y-2">
+      <button
+        ref={buttonRef}
+        type="button"
+        className="group relative size-full cursor-pointer overflow-hidden rounded-lg sm:size-64"
+        onClick={handleUploadClick}
+      >
+        <Image
+          src={imageSrc}
+          alt="Uploaded"
+          fallbackElement={fallbackElement}
+          className="h-full w-full object-cover"
+          onError={() => setImageSrc(undefined)} // Fallback if image fails to load
         />
 
-        {name && imageSrc && imageSrc.startsWith('http') && (
-          <input type="hidden" name={name} value={imageSrc} />
-        )}
-      </div>
-    );
-  },
-);
+        <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
+          Upload an image
+        </div>
+      </button>
+
+      <input
+        ref={fileInputRef}
+        {...inputProps}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileChange}
+      />
+
+      {imageSrc && (
+        <Button outline onClick={() => setShowRemoveAlert(true)}>
+          Remove Image
+        </Button>
+      )}
+
+      <Alert size="md" open={showRemoveAlert} onClose={setShowRemoveAlert}>
+        <AlertTitle>Are you sure you want to delete this image?</AlertTitle>
+        <AlertActions>
+          <Button color="red" onClick={handleRemoveImage}>
+            Yes, remove this image
+          </Button>
+          <Button plain onClick={() => setShowRemoveAlert(false)}>
+            No, keep this image
+          </Button>
+        </AlertActions>
+      </Alert>
+    </div>
+  );
+};

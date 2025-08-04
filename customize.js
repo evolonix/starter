@@ -10,9 +10,9 @@
  */
 
 const fs = require('fs');
-const fsExtra = require('fs-extra');
 const path = require('path');
 const mustache = require('mustache');
+const { spawn } = require('child_process');
 
 const IGNORE_PATTERNS = [
   '.git',
@@ -20,7 +20,11 @@ const IGNORE_PATTERNS = [
   'node_modules',
   'README.md',
   'customize.js',
+  'customize-ci.js',
   'customize.json',
+  '.png',
+  '.jpg',
+  '.jpeg',
 ];
 
 const CUSTOMIZE_FILE = 'customize.json';
@@ -82,12 +86,36 @@ function main() {
   try {
     fs.rmSync('README.md', { force: true });
     fs.renameSync('README_TEMPLATE.md', 'README.md');
-    if (fs.existsSync('.github')) {
-      fsExtra.removeSync('.github'); // Recursively delete
-    }
+    fs.rmSync('.github', { recursive: true, force: true });
     fs.renameSync('github', '.github');
     fs.rmSync('customize.js', { force: true });
+    fs.rmSync('customize-ci.js', { force: true });
     fs.rmSync('customize.json', { force: true });
+    console.log('✅ Cleanup complete!');
+
+    console.log('Preparing for first run...');
+    fs.rmSync('libs/data/prisma/dev.db', { force: true }); // Remove in case it already exists so setup can regenerate
+
+    const install = spawn('npm', ['install']);
+    install.stdout.on('data', (data) => console.log(data.toString()));
+    install.stderr.on('data', (data) => console.error(data.toString()));
+    install.on('exit', (code) => {
+      if (code !== 0) {
+        console.error('❌ Installation failed');
+        return;
+      }
+
+      console.log('✅ Dependencies installed successfully!');
+
+      const setup = spawn('npm', ['run', 'setup']);
+      setup.stdout.on('data', (data) => console.log(data.toString()));
+      setup.stderr.on('data', (data) => console.error(data.toString()));
+      setup.on('exit', (code) =>
+        code === 0
+          ? console.log('🚀 Your app is ready to run!')
+          : console.error('❌ Setup failed'),
+      );
+    });
   } catch (e) {
     console.warn('❌ Cleanup warning:', e.message);
   }

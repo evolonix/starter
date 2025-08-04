@@ -15,7 +15,7 @@ import { useLocation, useRouteLoaderData } from 'react-router';
 
 export type FeatureFlags = Record<string, boolean>;
 
-export const LOCAL_STORAGE_KEY = 'featureFlags';
+export const LOCAL_STORAGE_KEY = '~~_starter.name_~~_feature_flags';
 
 // === Context ===
 
