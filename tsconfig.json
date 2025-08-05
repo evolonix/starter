@@ -19,7 +19,7 @@
       "path": "./libs/examples/rick-and-morty/data-access"
     },
     {
-      "path": "./libs/prisma-schema"
+      "path": "./libs/data-access"
     }
   ]
 }

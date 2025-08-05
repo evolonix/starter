@@ -2,7 +2,7 @@ import { createCookieSessionStorage } from 'react-router';
 
 export const verifySessionStorage = createCookieSessionStorage({
   cookie: {
-    name: 'en_verification',
+    name: '~~_starter.name_~~_verification',
     sameSite: 'lax', // CSRF protection is advised if changing to 'none'
     path: '/',
     httpOnly: true,

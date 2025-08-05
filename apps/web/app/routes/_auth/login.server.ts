@@ -1,4 +1,5 @@
 import { redirect } from 'react-router';
+import { safeRedirect } from 'remix-utils/safe-redirect';
 import { sessionKey } from '../../utils/auth.server';
 import { combineResponseInits } from '../../utils/misc';
 import { authSessionStorage } from '../../utils/session.server';
@@ -21,9 +22,8 @@ export async function handleNewSession(
     request.headers.get('cookie'),
   );
   authSession.set(sessionKey, session.id);
-
   return redirect(
-    redirectTo ?? '/',
+    safeRedirect(redirectTo),
     combineResponseInits(
       {
         headers: {

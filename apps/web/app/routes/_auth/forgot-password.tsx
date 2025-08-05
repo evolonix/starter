@@ -39,6 +39,7 @@ export const ForgotPassword = () => {
         data[key] = value.toString();
       });
       console.log('Form submitted:', data);
+      // TODO: Handle form submission, e.g., send a request to reset the password
     },
   });
 

@@ -3,10 +3,13 @@ import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
 import { redirect } from 'react-router';
 import { Authenticator } from 'remix-auth';
+import { safeRedirect } from 'remix-utils/safe-redirect';
+import { providers } from './connections.server';
 import { prisma } from './db.server';
-import { combineHeaders } from './misc';
+import { combineHeaders, downloadFile } from './misc';
 import { type ProviderUser } from './providers/provider';
 import { authSessionStorage } from './session.server';
+import { uploadProfileImage } from './storage.server';
 
 export const SESSION_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 30;
 export const getSessionExpirationDate = () =>
@@ -16,12 +19,19 @@ export const sessionKey = 'sessionId';
 
 export const authenticator = new Authenticator<ProviderUser>();
 
+for (const [providerName, provider] of Object.entries(providers)) {
+  const strategy = provider.getAuthStrategy();
+  if (strategy) {
+    authenticator.use(strategy, providerName);
+  }
+}
+
 export async function getUserId(request: Request) {
   const authSession = await authSessionStorage.getSession(
     request.headers.get('cookie'),
   );
   const sessionId = authSession.get(sessionKey);
-  if (!sessionId) return undefined;
+  if (!sessionId) return null;
   const session = await prisma.session.findUnique({
     select: { userId: true },
     where: { id: sessionId, expirationDate: { gt: new Date() } },
@@ -83,15 +93,15 @@ export async function login({
 }
 
 export async function resetUserPassword({
-  email,
+  username,
   password,
 }: {
-  email: User['email'];
+  username: User['username'];
   password: string;
 }) {
   const hashedPassword = await getPasswordHash(password);
   return prisma.user.update({
-    where: { email },
+    where: { username },
     data: {
       password: {
         update: {
@@ -104,10 +114,12 @@ export async function resetUserPassword({
 
 export async function signup({
   email,
+  username,
   password,
   name,
 }: {
   email: User['email'];
+  username: User['username'];
   name: User['name'];
   password: string;
 }) {
@@ -119,6 +131,7 @@ export async function signup({
       user: {
         create: {
           email: email.toLowerCase(),
+          username: username.toLowerCase(),
           name,
           roles: { connect: { name: 'user' } },
           password: {
@@ -137,12 +150,14 @@ export async function signup({
 
 export async function signupWithConnection({
   email,
+  username,
   name,
   providerId,
   providerName,
   imageUrl,
 }: {
   email: User['email'];
+  username: User['username'];
   name: User['name'];
   providerId: Connection['providerId'];
   providerName: Connection['providerName'];
@@ -151,12 +166,27 @@ export async function signupWithConnection({
   const user = await prisma.user.create({
     data: {
       email: email.toLowerCase(),
+      username: username.toLowerCase(),
       name,
       roles: { connect: { name: 'user' } },
       connections: { create: { providerId, providerName } },
     },
     select: { id: true },
   });
+
+  if (imageUrl) {
+    const imageFile = await downloadFile(imageUrl);
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        image: {
+          create: {
+            objectKey: await uploadProfileImage(user.id, imageFile),
+          },
+        },
+      },
+    });
+  }
 
   // Create and return the session
   const session = await prisma.session.create({
@@ -193,7 +223,7 @@ export async function logout(
       // Do nothing
     });
   }
-  throw redirect(redirectTo, {
+  throw redirect(safeRedirect(redirectTo), {
     ...responseInit,
     headers: combineHeaders(
       { 'set-cookie': await authSessionStorage.destroySession(authSession) },

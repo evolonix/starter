@@ -1,5 +1,7 @@
 import {
+  data,
   Links,
+  LoaderFunctionArgs,
   Meta,
   Outlet,
   Scripts,
@@ -17,6 +19,15 @@ import {
 import stylesheetUrl from '../styles.css?url';
 import appleTouchIconAssetUrl from './assets/apple-touch-icon.png';
 import faviconAssetUrl from './assets/favicon.svg';
+import { getUserId, logout } from './utils/auth.server';
+import { getHints } from './utils/client-hints';
+import { prisma } from './utils/db.server';
+import { getEnv } from './utils/env.server';
+import { honeypot } from './utils/honeypot.server';
+import { combineHeaders, getDomainUrl } from './utils/misc';
+import { getTheme } from './utils/theme.server';
+import { makeTimings, time } from './utils/timing.server';
+import { getToast } from './utils/toast.server';
 
 export const meta: MetaFunction = () => [
   {
@@ -62,6 +73,70 @@ export const links: LinksFunction = () => [
     href: stylesheetUrl,
   },
 ];
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const timings = makeTimings('root loader');
+  const userId = await time(() => getUserId(request), {
+    timings,
+    type: 'getUserId',
+    desc: 'getUserId in root',
+  });
+
+  const user = userId
+    ? await time(
+        () =>
+          prisma.user.findUnique({
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              image: { select: { objectKey: true } },
+              roles: {
+                select: {
+                  name: true,
+                  permissions: {
+                    select: { entity: true, action: true, access: true },
+                  },
+                },
+              },
+            },
+            where: { id: userId },
+          }),
+        { timings, type: 'find user', desc: 'find user in root' },
+      )
+    : null;
+  if (userId && !user) {
+    console.info('something weird happened');
+    // something weird happened... The user is authenticated but we can't find
+    // them in the database. Maybe they were deleted? Let's log them out.
+    await logout({ request, redirectTo: '/' });
+  }
+  const { toast, headers: toastHeaders } = await getToast(request);
+  const honeyProps = await honeypot.getInputProps();
+
+  return data(
+    {
+      user,
+      requestInfo: {
+        hints: getHints(request),
+        origin: getDomainUrl(request),
+        path: new URL(request.url).pathname,
+        userPrefs: {
+          theme: getTheme(request),
+        },
+      },
+      ENV: getEnv(),
+      toast,
+      honeyProps,
+    },
+    {
+      headers: combineHeaders(
+        { 'Server-Timing': timings.toString() },
+        toastHeaders,
+      ),
+    },
+  );
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

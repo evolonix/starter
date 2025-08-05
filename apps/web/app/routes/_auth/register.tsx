@@ -46,6 +46,7 @@ export const Register = () => {
         data[key] = value.toString();
       });
       console.log('Form submitted:', data);
+      // TODO: Handle form submission, e.g., send a request to create a new account
     },
   });
 

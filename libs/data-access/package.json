@@ -1,40 +1,47 @@
 {
-  "name": "@~~_starter.name_~~/prisma-schema",
+  "name": "@~~_starter.name_~~/data-access",
   "version": "0.0.1",
-  "private": true,
   "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
   },
   "nx": {
     "targets": {
       "prisma": {
         "command": "prisma",
         "options": {
-          "cwd": "libs/prisma-schema"
+          "cwd": "libs/data-access"
         }
       },
       "generate-types": {
         "command": "prisma generate",
         "options": {
-          "cwd": "libs/prisma-schema"
+          "cwd": "libs/data-access"
         }
       },
       "migrate": {
         "command": "prisma migrate dev",
         "options": {
-          "cwd": "libs/prisma-schema"
+          "cwd": "libs/data-access"
         }
       },
       "seed": {
         "command": "prisma db seed",
         "options": {
-          "cwd": "libs/prisma-schema"
+          "cwd": "libs/data-access"
         }
       }
     }
   },
-  "dependencies": {},
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   }
