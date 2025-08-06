@@ -25,7 +25,6 @@ import { prisma } from './utils/db.server';
 import { getEnv } from './utils/env.server';
 import { honeypot } from './utils/honeypot.server';
 import { combineHeaders, getDomainUrl } from './utils/misc';
-import { getTheme } from './utils/theme.server';
 import { makeTimings, time } from './utils/timing.server';
 import { getToast } from './utils/toast.server';
 
@@ -121,9 +120,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
         hints: getHints(request),
         origin: getDomainUrl(request),
         path: new URL(request.url).pathname,
-        userPrefs: {
-          theme: getTheme(request),
-        },
       },
       ENV: getEnv(),
       toast,

@@ -8,7 +8,8 @@
     "dev": "npx nx dev web",
     "prestart": "npm run codegen:all",
     "start": "npm run dev",
-    "update-deps": "bash scripts/cp-all-deps.sh"
+    "update-deps": "bash scripts/cp-all-deps.sh",
+    "knip": "knip"
   },
   "private": true,
   "dependencies": {
@@ -109,6 +110,7 @@
     "jiti": "2.4.2",
     "jsdom": "~22.1.0",
     "jsonc-eslint-parser": "^2.1.0",
+    "knip": "^5.62.0",
     "lint-staged": "^16.1.2",
     "msw": "^2.10.4",
     "mustache": "^4.2.0",
