@@ -30,7 +30,8 @@ import {
 
 import { KeyIcon } from '@heroicons/react/20/solid';
 import { useOptimistic, useState, useTransition } from 'react';
-import { login } from '../../utils/auth.server';
+import { login, requireAnonymous } from '../../utils/auth.server';
+import { checkHoneypot } from '../../utils/honeypot.server';
 import { getErrorMessage } from '../../utils/misc';
 import { handleNewSession } from './login.server';
 
@@ -44,9 +45,9 @@ const schema = z.object({
 });
 
 export async function action({ request }: ActionFunctionArgs) {
-  // await requireAnonymous(request)
+  await requireAnonymous(request);
   const formData = await request.formData();
-  // await checkHoneypot(formData)
+  await checkHoneypot(formData);
   const submission = await parseWithZod(formData, {
     schema: (intent) =>
       schema.transform(async (data, ctx) => {
