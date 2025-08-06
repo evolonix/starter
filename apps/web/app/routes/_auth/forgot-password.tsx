@@ -11,9 +11,7 @@ import {
   Label,
   Link,
   Logo,
-  Strong,
   Text,
-  TextLink,
 } from '@~~_starter.name_~~/ui';
 
 const schema = z.object({
@@ -77,12 +75,12 @@ export const ForgotPassword = () => {
       <Button type="submit" className="w-full">
         Reset password
       </Button>
-      <Text>
+      {/* <Text>
         Don't have an account?{' '}
         <TextLink href="../register">
           <Strong>Sign up</Strong>
         </TextLink>
-      </Text>
+      </Text> */}
     </form>
   );
 };

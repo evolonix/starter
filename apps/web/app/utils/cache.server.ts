@@ -18,7 +18,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { z } from 'zod';
 import { cachifiedTimingReporter, type Timings } from './timing.server';
 
-const CACHE_DATABASE_PATH = process.env.CACHE_DATABASE_PATH ?? './cache.db';
+const CACHE_DATABASE_PATH = process.env.CACHE_DATABASE_PATH;
 
 const cacheDb = remember('cacheDb', createDatabase);
 

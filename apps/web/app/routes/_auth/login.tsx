@@ -167,12 +167,12 @@ export const Login = () => {
         <Button type="submit" className="w-full">
           Login
         </Button>
-        <Text>
+        {/* <Text>
           Don't have an account?{' '}
           <TextLink href="../register">
             <Strong>Sign up</Strong>
           </TextLink>
-        </Text>
+        </Text> */}
       </Form>
       <Divider />
       <div className="flex flex-col gap-5">

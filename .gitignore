@@ -53,6 +53,5 @@ test-output
 
 __generated__
 
-/generated/prisma
-prisma/dev.db
-cache.db
+**/prisma/dev.db
+**/cache.db
