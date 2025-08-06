@@ -6,10 +6,9 @@ import { Authenticator } from 'remix-auth';
 import { safeRedirect } from 'remix-utils/safe-redirect';
 import { providers } from './connections.server';
 import { prisma } from './db.server';
-import { combineHeaders, downloadFile } from './misc';
+import { combineHeaders } from './misc';
 import { type ProviderUser } from './providers/provider';
 import { authSessionStorage } from './session.server';
-import { uploadProfileImage } from './storage.server';
 
 export const SESSION_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 30;
 export const getSessionExpirationDate = () =>
@@ -173,20 +172,6 @@ export async function signupWithConnection({
     },
     select: { id: true },
   });
-
-  if (imageUrl) {
-    const imageFile = await downloadFile(imageUrl);
-    await prisma.user.update({
-      where: { id: user.id },
-      data: {
-        image: {
-          create: {
-            objectKey: await uploadProfileImage(user.id, imageFile),
-          },
-        },
-      },
-    });
-  }
 
   // Create and return the session
   const session = await prisma.session.create({

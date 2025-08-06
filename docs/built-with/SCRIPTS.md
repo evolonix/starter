@@ -1,6 +1,6 @@
 ## Scripts
 
-Create [scripts/cp-dep.sh](../../scripts/cp-dep.sh) with the following to copy a dependency from one `package.json` to another:
+Create [scripts/update-dep.sh](../../scripts/update-dep.sh) with the following to copy a dependency from one `package.json` to another:
 
 ```bash
 #!/usr/bin/env bash
@@ -8,9 +8,9 @@ Create [scripts/cp-dep.sh](../../scripts/cp-dep.sh) with the following to copy a
 # This script copies a single dependency from source-package.json to target-package.json
 
 # Example usage:
-# ./cp-dep.sh package-name target-package.json
-# ./cp-dep.sh package-name target-package.json source-package.json dependencies
-# ./cp-dep.sh package-name target-package.json source-package.json devDependencies
+# ./update-dep.sh package-name target-package.json
+# ./update-dep.sh package-name target-package.json source-package.json dependencies
+# ./update-dep.sh package-name target-package.json source-package.json devDependencies
 
 pkg="$1"
 target="$2"
@@ -36,10 +36,10 @@ Create [scripts/cp-all-dep.sh](../../scripts/cp-all-dep.sh) with the following t
 # This script copies all dependencies from source-package.json to target-package.json
 
 # Example usage:
-# ./cp-all-deps.sh
-# ./cp-all-deps.sh target-package.json
-# ./cp-all-deps.sh target-package.json source-package.json dependencies
-# ./cp-all-deps.sh target-package.json source-package.json devDependencies
+# ./update-deps.sh
+# ./update-deps.sh target-package.json
+# ./update-deps.sh target-package.json source-package.json dependencies
+# ./update-deps.sh target-package.json source-package.json devDependencies
 
 target="${1:-apps/web/package.json}"
 source="${2:-package.json}"
@@ -57,7 +57,7 @@ fi
 # Read all dependencies from source and copy them to target
 dependencies=$(jq -r --arg section "$section" '.[$section] | keys[]' "$source")
 for pkg in $dependencies; do
-  bash scripts/cp-dep.sh "$pkg" "$target" "$source" "$section"
+  bash scripts/update-dep.sh "$pkg" "$target" "$source" "$section"
 done
 
 echo "All dependencies from $source copied to $target under section '$section'."
@@ -65,13 +65,13 @@ echo "All dependencies from $source copied to $target under section '$section'."
 
 Optionally, configure each target to default to `apps/web/package.json`:
 
-`scripts/cp-dep.sh`:
+`scripts/update-dep.sh`:
 
 ```bash
 target="${2:-apps/web/package.json}"
 ```
 
-`scripts/cp-all-deps.sh`:
+`scripts/update-deps.sh`:
 
 ```bash
 target="${1:-apps/web/package.json}"
@@ -82,7 +82,7 @@ Update [package.json](../../package.json) to include these scripts:
 ```json
 {
   "scripts": {
-    "update-deps": "bash scripts/cp-all-deps.sh"
+    "update-deps": "bash scripts/update-deps.sh"
   }
 }
 ```

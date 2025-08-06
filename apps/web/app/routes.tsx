@@ -25,9 +25,9 @@ export default [
     route('register', './routes/_auth/register.tsx'),
     route('forgot-password', './routes/_auth/forgot-password.tsx'),
     route('logout', './routes/_auth/logout.tsx'),
-    ...prefix('webauthn', [
-      route('registration', './routes/_auth/webauthn/registration.ts'),
-      route('authentication', './routes/_auth/webauthn/authentication.ts'),
-    ]),
+  ]),
+  ...prefix('webauthn', [
+    route('registration', './routes/_auth/webauthn/registration.ts'),
+    route('authentication', './routes/_auth/webauthn/authentication.ts'),
   ]),
 ] satisfies RouteConfig;
