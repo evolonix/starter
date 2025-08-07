@@ -76,6 +76,9 @@
     }
   ],
   "targetDefaults": {
+    "build": {
+      "dependsOn": ["^codegen", "^build"]
+    },
     "codegen": {
       "cache": true,
       "outputs": ["{projectRoot}/src/__generated__"],
