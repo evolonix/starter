@@ -1,5 +1,6 @@
 export * from './catalyst';
 export * from './drawer';
+export * from './general-error-boundary';
 export * from './grid-layout';
 export * from './hooks';
 export * from './image-uploader';

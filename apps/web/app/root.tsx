@@ -1,12 +1,16 @@
 import {
+  data,
   Links,
+  LoaderFunctionArgs,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
   type LinksFunction,
   type MetaFunction,
 } from 'react-router';
+import { HoneypotProvider } from 'remix-utils/honeypot/react';
 
 import {
   FeatureFlagProvider,
@@ -14,9 +18,11 @@ import {
   FeatureFlagToggleDialog,
 } from '@~~_starter.name_~~/feature-flags';
 
+import { GeneralErrorBoundary } from '@~~_starter.name_~~/ui';
 import stylesheetUrl from '../styles.css?url';
 import appleTouchIconAssetUrl from './assets/apple-touch-icon.png';
 import faviconAssetUrl from './assets/favicon.svg';
+import { honeypot } from './utils/honeypot.server';
 
 export const meta: MetaFunction = () => [
   {
@@ -63,6 +69,14 @@ export const links: LinksFunction = () => [
   },
 ];
 
+export async function loader({ request }: LoaderFunctionArgs) {
+  const honeyProps = await honeypot.getInputProps();
+
+  return data({
+    honeyProps,
+  });
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html
@@ -87,14 +101,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
 const initialFlags: FeatureFlags = {};
 
 export default function App() {
+  const { honeyProps } = useLoaderData();
+
   return (
     <FeatureFlagProvider
       flagsmithEnvironmentId={import.meta.env.VITE_FLAGSMITH_ENVIRONMENT_ID}
       initialFlags={initialFlags}
     >
-      <Outlet />
+      <HoneypotProvider {...honeyProps}>
+        <Outlet />
+      </HoneypotProvider>
 
       <FeatureFlagToggleDialog />
     </FeatureFlagProvider>
   );
 }
+
+export const ErrorBoundary = GeneralErrorBoundary;
