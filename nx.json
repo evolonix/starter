@@ -77,7 +77,7 @@
   ],
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^codegen", "^build"]
+      "dependsOn": ["codegen", "^build"]
     },
     "codegen": {
       "cache": true,
