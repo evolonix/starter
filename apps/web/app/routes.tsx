@@ -18,7 +18,10 @@ export default [
     route('privacy', './routes/privacy.tsx'),
     route('feedback', './routes/feedback.tsx'),
     ...prefix('admin', [route('settings', './routes/admin/settings.tsx')]),
-    ...prefix('cdk', [route('grid-layout', './routes/cdk/grid-layout.tsx')]),
+    ...prefix('cdk', [
+      index('./routes/cdk/dashboard.tsx'),
+      route('grid-layout', './routes/cdk/grid-layout.tsx'),
+    ]),
   ]),
   layout('./auth.tsx', [
     route('login', './routes/_auth/login.tsx'),

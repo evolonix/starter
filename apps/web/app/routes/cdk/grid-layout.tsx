@@ -34,7 +34,7 @@ export const GridLayout = () => {
 
   return (
     <>
-      <PageHeader label="Grid Layout" />
+      <PageHeader label="Grid layout" />
       <Layout>
         {lg ? (
           <>

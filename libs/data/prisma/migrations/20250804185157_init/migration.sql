@@ -163,6 +163,7 @@ INSERT INTO Permission VALUES('clnf2zvlo0007pcouw1yzoyam','delete','user','any',
 
 INSERT INTO Role VALUES('clnf2zvlw000gpcour6dyyuh6','admin','',1696625465540,1696625465540);
 INSERT INTO Role VALUES('clnf2zvlx000hpcou5dfrbegs','user','',1696625465542,1696625465542);
+INSERT INTO Role VALUES('cme1ux2ua0000uzd8xko991n0','developer','',1696625465544,1696625465544);
 
 INSERT INTO _PermissionToRole VALUES('clnf2zvll0001pcouly1310ku','clnf2zvlw000gpcour6dyyuh6');
 INSERT INTO _PermissionToRole VALUES('clnf2zvlm0003pcouea4dee51','clnf2zvlw000gpcour6dyyuh6');
@@ -172,3 +173,7 @@ INSERT INTO _PermissionToRole VALUES('clnf2zvli0000pcou3zzzzome','clnf2zvlx000hp
 INSERT INTO _PermissionToRole VALUES('clnf2zvll0002pcouka7348re','clnf2zvlx000hpcou5dfrbegs');
 INSERT INTO _PermissionToRole VALUES('clnf2zvlm0004pcou2guvolx5','clnf2zvlx000hpcou5dfrbegs');
 INSERT INTO _PermissionToRole VALUES('clnf2zvlo0006pcouyoptc5jp','clnf2zvlx000hpcou5dfrbegs');
+INSERT INTO _PermissionToRole VALUES('clnf2zvll0001pcouly1310ku','cme1ux2ua0000uzd8xko991n0');
+INSERT INTO _PermissionToRole VALUES('clnf2zvlm0003pcouea4dee51','cme1ux2ua0000uzd8xko991n0');
+INSERT INTO _PermissionToRole VALUES('clnf2zvln0005pcoun78ps5ap','cme1ux2ua0000uzd8xko991n0');
+INSERT INTO _PermissionToRole VALUES('clnf2zvlo0007pcouw1yzoyam','cme1ux2ua0000uzd8xko991n0');

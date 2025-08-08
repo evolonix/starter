@@ -1,5 +1,4 @@
 import { InboxIcon, MagnifyingGlassIcon } from '@heroicons/react/16/solid';
-import { type User } from '@prisma/client';
 
 import {
   Avatar,
@@ -13,7 +12,7 @@ import {
 import { ProfileDropdownMenu } from './profile-dropdown-menu';
 
 interface LayoutNavbarProps {
-  user?: User;
+  user?: { name: string; email: string } | null;
 }
 
 export const LayoutNavbar = ({ user }: LayoutNavbarProps) => {
@@ -29,12 +28,7 @@ export const LayoutNavbar = ({ user }: LayoutNavbarProps) => {
         </NavbarItem>
         <Dropdown>
           <DropdownButton as={NavbarItem}>
-            <Avatar
-              // src="/profile-photo.jpg"
-              initials={user?.name?.charAt(0)}
-              square
-              alt=""
-            />
+            <Avatar initials={user?.name?.charAt(0)} square alt={user?.name} />
           </DropdownButton>
           <ProfileDropdownMenu anchor="bottom end" />
         </Dropdown>

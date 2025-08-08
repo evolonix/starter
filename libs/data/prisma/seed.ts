@@ -44,7 +44,9 @@ export async function main() {
       username: 'jason',
       name: 'Jason',
       password: { create: createPassword('password') },
-      roles: { connect: [{ name: 'admin' }, { name: 'user' }] },
+      roles: {
+        connect: [{ name: 'admin' }, { name: 'user' }, { name: 'developer' }],
+      },
     },
   });
   console.timeEnd(`🐨 Created admin user "jason"`);

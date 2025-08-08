@@ -1,5 +1,6 @@
 import {
   ChevronUpIcon,
+  CodeBracketIcon,
   Cog6ToothIcon,
   HomeIcon,
   InboxIcon,
@@ -7,7 +8,6 @@ import {
   QuestionMarkCircleIcon,
   SparklesIcon,
 } from '@heroicons/react/16/solid';
-import { type User } from '@prisma/client';
 import clsx from 'clsx';
 import { useCallback } from 'react';
 import { useLocation } from 'react-router';
@@ -30,12 +30,16 @@ import { ProfileDropdownMenu } from './profile-dropdown-menu';
 
 export interface LayoutSidebarProps {
   isExpanded?: boolean;
-  user?: User;
+  user?: { name: string; email: string } | null;
+  isDeveloper?: boolean;
+  isAdmin?: boolean;
 }
 
 export const LayoutSidebar = ({
   isExpanded = false,
   user,
+  isDeveloper = false,
+  isAdmin = false,
 }: LayoutSidebarProps) => {
   const { pathname } = useLocation();
 
@@ -97,13 +101,25 @@ export const LayoutSidebar = ({
         <SidebarSpacer />
         <SidebarSection>
           <SidebarItem
+            href="/cdk"
+            title={isExpanded ? undefined : 'CDK'}
+            current={isCurrent('/cdk')}
+            hidden={!isDeveloper}
+          >
+            <CodeBracketIcon />
+            <SidebarLabel>CDK</SidebarLabel>
+          </SidebarItem>
+          <SidebarItem
             href="/admin/settings"
             title={isExpanded ? undefined : 'Settings'}
             current={isCurrent('/admin/settings')}
+            hidden={!isAdmin}
           >
             <Cog6ToothIcon />
             <SidebarLabel>Settings</SidebarLabel>
           </SidebarItem>
+        </SidebarSection>
+        <SidebarSection>
           <SidebarItem
             href="/support"
             title={isExpanded ? undefined : 'Support'}
@@ -135,11 +151,10 @@ export const LayoutSidebar = ({
           >
             <span className="flex min-w-0 items-center gap-3">
               <Avatar
-                // src="/profile-photo.jpg"
                 initials={user?.name?.charAt(0)}
                 className="size-10"
                 square
-                alt=""
+                alt={user?.name}
               />
               <span className="min-w-0">
                 <span className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">

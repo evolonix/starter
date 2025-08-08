@@ -4,6 +4,7 @@ import {
   LoaderFunctionArgs,
   Meta,
   Outlet,
+  redirect,
   Scripts,
   ScrollRestoration,
   useLoaderData,
@@ -22,6 +23,8 @@ import { GeneralErrorBoundary } from '@~~_starter.name_~~/ui';
 import stylesheetUrl from '../styles.css?url';
 import appleTouchIconAssetUrl from './assets/apple-touch-icon.png';
 import faviconAssetUrl from './assets/favicon.svg';
+import { getUserId } from './utils/auth.server';
+import { prisma } from './utils/db.server';
 import { honeypot } from './utils/honeypot.server';
 
 export const meta: MetaFunction = () => [
@@ -70,9 +73,38 @@ export const links: LinksFunction = () => [
 ];
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const userId = await getUserId(request);
+
+  // Require authentication for the entire app
+  if (!userId) {
+    return redirect('/login');
+  }
+
+  const user = userId
+    ? await prisma.user.findUnique({
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          username: true,
+          image: { select: { objectKey: true } },
+          roles: {
+            select: {
+              name: true,
+              permissions: {
+                select: { entity: true, action: true, access: true },
+              },
+            },
+          },
+        },
+        where: { id: userId },
+      })
+    : null;
+
   const honeyProps = await honeypot.getInputProps();
 
   return data({
+    user,
     honeyProps,
   });
 }
@@ -101,7 +133,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 const initialFlags: FeatureFlags = {};
 
 export default function App() {
-  const { honeyProps } = useLoaderData();
+  const { honeyProps } = useLoaderData<typeof loader>();
 
   return (
     <FeatureFlagProvider
