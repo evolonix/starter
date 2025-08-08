@@ -3,8 +3,19 @@ import {
   LayoutSidebar,
   SidebarLayout,
 } from '@~~_starter.name_~~/ui';
-import { Outlet } from 'react-router';
+import { LoaderFunctionArgs, Outlet, redirect } from 'react-router';
+import { getUserId } from './utils/auth.server';
 import { userHasRole, useUser } from './utils/user';
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const userId = await getUserId(request);
+  // Require authentication for the entire app
+  if (!userId) {
+    return redirect('/login');
+  }
+
+  return null;
+}
 
 export function App() {
   const user = useUser();

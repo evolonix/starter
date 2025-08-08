@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
-    "setup": "concurrently \"nx run-many --target=codegen --all\" \"nx run data:prisma migrate deploy\" \"nx run data:generate-types\" \"playwright install\"",
+    "setup": "concurrently \"nx run-many --target=codegen --all\" \"nx run data:prisma migrate deploy\" \"nx run data:prisma db seed\" \"nx run data:generate-types\" \"playwright install\"",
+    "predev": "bash scripts/ensure-setup.sh",
     "dev": "nx dev web",
     "start": "npm run dev",
     "update-deps": "bash scripts/update-deps.sh",

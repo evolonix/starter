@@ -4,7 +4,6 @@ import {
   LoaderFunctionArgs,
   Meta,
   Outlet,
-  redirect,
   Scripts,
   ScrollRestoration,
   useLoaderData,
@@ -23,7 +22,7 @@ import { GeneralErrorBoundary } from '@~~_starter.name_~~/ui';
 import stylesheetUrl from '../styles.css?url';
 import appleTouchIconAssetUrl from './assets/apple-touch-icon.png';
 import faviconAssetUrl from './assets/favicon.svg';
-import { getUserId } from './utils/auth.server';
+import { getUserId, logout } from './utils/auth.server';
 import { prisma } from './utils/db.server';
 import { honeypot } from './utils/honeypot.server';
 
@@ -74,12 +73,6 @@ export const links: LinksFunction = () => [
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = await getUserId(request);
-
-  // Require authentication for the entire app
-  if (!userId) {
-    return redirect('/login');
-  }
-
   const user = userId
     ? await prisma.user.findUnique({
         select: {
@@ -100,6 +93,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
         where: { id: userId },
       })
     : null;
+
+  if (userId && !user) {
+    console.info('something weird happened');
+    // something weird happened... The user is authenticated but we can't find
+    // them in the database. Maybe they were deleted? Let's log them out.
+    await logout({ request, redirectTo: '/' });
+  }
 
   const honeyProps = await honeypot.getInputProps();
 
