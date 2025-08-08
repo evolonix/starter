@@ -1,5 +1,6 @@
 import {
   ChevronUpIcon,
+  CodeBracketIcon,
   Cog6ToothIcon,
   HomeIcon,
   InboxIcon,
@@ -8,9 +9,9 @@ import {
   SparklesIcon,
 } from '@heroicons/react/16/solid';
 import clsx from 'clsx';
+import { useCallback } from 'react';
 import { useLocation } from 'react-router';
 
-import { useCallback } from 'react';
 import {
   Avatar,
   Dropdown,
@@ -29,9 +30,17 @@ import { ProfileDropdownMenu } from './profile-dropdown-menu';
 
 export interface LayoutSidebarProps {
   isExpanded?: boolean;
+  user?: { name: string; email: string } | null;
+  isDeveloper?: boolean;
+  isAdmin?: boolean;
 }
 
-export const LayoutSidebar = ({ isExpanded = false }: LayoutSidebarProps) => {
+export const LayoutSidebar = ({
+  isExpanded = false,
+  user,
+  isDeveloper = false,
+  isAdmin = false,
+}: LayoutSidebarProps) => {
   const { pathname } = useLocation();
 
   const isCurrent = useCallback(
@@ -92,13 +101,25 @@ export const LayoutSidebar = ({ isExpanded = false }: LayoutSidebarProps) => {
         <SidebarSpacer />
         <SidebarSection>
           <SidebarItem
+            href="/cdk"
+            title={isExpanded ? undefined : 'CDK'}
+            current={isCurrent('/cdk')}
+            hidden={!isDeveloper}
+          >
+            <CodeBracketIcon />
+            <SidebarLabel>CDK</SidebarLabel>
+          </SidebarItem>
+          <SidebarItem
             href="/admin/settings"
             title={isExpanded ? undefined : 'Settings'}
             current={isCurrent('/admin/settings')}
+            hidden={!isAdmin}
           >
             <Cog6ToothIcon />
             <SidebarLabel>Settings</SidebarLabel>
           </SidebarItem>
+        </SidebarSection>
+        <SidebarSection>
           <SidebarItem
             href="/support"
             title={isExpanded ? undefined : 'Support'}
@@ -126,22 +147,21 @@ export const LayoutSidebar = ({ isExpanded = false }: LayoutSidebarProps) => {
         <Dropdown>
           <DropdownButton
             as={SidebarItem}
-            title={isExpanded ? undefined : 'Erica <erica@example.com>'}
+            title={isExpanded ? undefined : `${user?.name} <${user?.email}>`}
           >
             <span className="flex min-w-0 items-center gap-3">
               <Avatar
-                // src="/profile-photo.jpg"
-                initials={'Erica'.charAt(0)}
+                initials={user?.name?.charAt(0)}
                 className="size-10"
                 square
-                alt=""
+                alt={user?.name}
               />
               <span className="min-w-0">
                 <span className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">
-                  Erica
+                  {user?.name}
                 </span>
                 <span className="block truncate text-xs/5 font-normal text-zinc-600 dark:text-zinc-400">
-                  erica@example.com
+                  {user?.email}
                 </span>
               </span>
             </span>

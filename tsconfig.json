@@ -17,6 +17,9 @@
     },
     {
       "path": "./libs/examples/rick-and-morty/data-access"
+    },
+    {
+      "path": "./libs/data"
     }
   ]
 }

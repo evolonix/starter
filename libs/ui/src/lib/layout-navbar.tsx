@@ -11,7 +11,11 @@ import {
 } from './catalyst';
 import { ProfileDropdownMenu } from './profile-dropdown-menu';
 
-export const LayoutNavbar = () => {
+interface LayoutNavbarProps {
+  user?: { name: string; email: string } | null;
+}
+
+export const LayoutNavbar = ({ user }: LayoutNavbarProps) => {
   return (
     <Navbar>
       <NavbarSpacer />
@@ -24,12 +28,7 @@ export const LayoutNavbar = () => {
         </NavbarItem>
         <Dropdown>
           <DropdownButton as={NavbarItem}>
-            <Avatar
-              // src="/profile-photo.jpg"
-              initials={'Erica'.charAt(0)}
-              square
-              alt=""
-            />
+            <Avatar initials={user?.name?.charAt(0)} square alt={user?.name} />
           </DropdownButton>
           <ProfileDropdownMenu anchor="bottom end" />
         </Dropdown>

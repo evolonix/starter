@@ -25,7 +25,8 @@
           "buildDepsName": "build-deps",
           "watchDepsName": "watch-deps"
         }
-      }
+      },
+      "exclude": ["libs/data/*"]
     },
     {
       "plugin": "@nx/react/router-plugin",
@@ -63,9 +64,21 @@
       "options": {
         "targetName": "e2e"
       }
+    },
+    {
+      "plugin": "@nx/js/typescript",
+      "include": ["libs/data/*"],
+      "options": {
+        "typecheck": {
+          "targetName": "typecheck"
+        }
+      }
     }
   ],
   "targetDefaults": {
+    "build": {
+      "dependsOn": ["codegen", "^build"]
+    },
     "codegen": {
       "cache": true,
       "outputs": ["{projectRoot}/src/__generated__"],
