@@ -51,6 +51,9 @@
   ],
   "references": [
     {
+      "path": "../../libs/manage-list/feature/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/features/feature-flags/tsconfig.lib.json"
     },
     {

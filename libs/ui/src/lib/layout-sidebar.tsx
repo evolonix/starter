@@ -18,8 +18,10 @@ import {
   DropdownButton,
   Sidebar,
   SidebarBody,
+  SidebarDivider,
   SidebarFooter,
   SidebarHeader,
+  SidebarHeading,
   SidebarItem,
   SidebarLabel,
   SidebarSection,
@@ -99,26 +101,49 @@ export const LayoutSidebar = ({
           </SidebarItem>
         </SidebarSection>
         <SidebarSpacer />
-        <SidebarSection>
+        <SidebarSection hidden={!isDeveloper}>
+          <SidebarHeading
+            isExpanded={isExpanded}
+            initials="D"
+            aria-label="Developer"
+          >
+            Developer
+          </SidebarHeading>
           <SidebarItem
             href="/cdk"
             title={isExpanded ? undefined : 'CDK'}
             current={isCurrent('/cdk')}
-            hidden={!isDeveloper}
           >
             <CodeBracketIcon />
             <SidebarLabel>CDK</SidebarLabel>
+          </SidebarItem>
+        </SidebarSection>
+        <SidebarSection hidden={!isAdmin}>
+          <SidebarHeading
+            isExpanded={isExpanded}
+            initials="A"
+            aria-label="Admin"
+          >
+            Admin
+          </SidebarHeading>
+          <SidebarItem
+            href="/admin/users"
+            title={isExpanded ? undefined : 'Users'}
+            current={isCurrent('/admin/users')}
+          >
+            <Cog6ToothIcon />
+            <SidebarLabel>Users</SidebarLabel>
           </SidebarItem>
           <SidebarItem
             href="/admin/settings"
             title={isExpanded ? undefined : 'Settings'}
             current={isCurrent('/admin/settings')}
-            hidden={!isAdmin}
           >
             <Cog6ToothIcon />
             <SidebarLabel>Settings</SidebarLabel>
           </SidebarItem>
         </SidebarSection>
+        <SidebarDivider />
         <SidebarSection>
           <SidebarItem
             href="/support"

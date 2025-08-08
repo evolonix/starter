@@ -1,4 +1,4 @@
-import { useForm } from '@conform-to/react';
+import { getFormProps, useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 import { z } from 'zod';
 
@@ -18,6 +18,7 @@ import {
   Text,
   TextLink,
 } from '@~~_starter.name_~~/ui';
+import { Form } from 'react-router';
 
 const schema = z.object({
   email: z
@@ -51,12 +52,10 @@ export const Register = () => {
   });
 
   return (
-    <form
-      id={form.id}
+    <Form
       method="POST"
+      {...getFormProps(form)}
       className="grid w-full max-w-sm grid-cols-1 gap-8"
-      noValidate={form.noValidate}
-      onSubmit={form.onSubmit}
     >
       <Link
         href="/"
@@ -131,7 +130,7 @@ export const Register = () => {
           <Strong>Sign in</Strong>
         </TextLink>
       </Text>
-    </form>
+    </Form>
   );
 };
 

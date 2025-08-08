@@ -16,6 +16,7 @@ export default defineConfig(() => ({
     host: 'localhost',
   },
   plugins: [
+    // !process.env.VITEST && reactRouterDevTools(),
     !process.env.VITEST && reactRouter(),
     tailwindcss(),
     tsconfigPaths(),

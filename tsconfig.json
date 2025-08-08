@@ -20,6 +20,12 @@
     },
     {
       "path": "./libs/data"
+    },
+    {
+      "path": "./libs/manage-list/feature"
+    },
+    {
+      "path": "./libs/util"
     }
   ]
 }

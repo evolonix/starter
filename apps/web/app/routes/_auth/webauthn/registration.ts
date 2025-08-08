@@ -21,14 +21,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
   const user = await prisma.user.findUniqueOrThrow({
     where: { id: userId },
-    select: { email: true, name: true, username: true },
+    select: { email: true, name: true },
   });
 
   const config = getWebAuthnConfig(request);
   const options = await generateRegistrationOptions({
     rpName: config.rpName,
     rpID: config.rpID,
-    userName: user.username,
+    userName: user.email,
     userID: new TextEncoder().encode(userId),
     userDisplayName: user.name ?? user.email,
     attestationType: 'none',

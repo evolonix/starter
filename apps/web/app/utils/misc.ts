@@ -2,6 +2,12 @@ import { useEffect, useMemo, useRef } from 'react';
 import { useFormAction, useNavigation } from 'react-router';
 import { useSpinDelay } from 'spin-delay';
 
+export function getUserImgSrc(objectKey?: string | null) {
+  return objectKey
+    ? `/resources/images?objectKey=${encodeURIComponent(objectKey)}`
+    : '/user.png';
+}
+
 export function getErrorMessage(error: unknown) {
   if (typeof error === 'string') return error;
   if (

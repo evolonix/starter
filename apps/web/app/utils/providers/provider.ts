@@ -5,7 +5,6 @@ import { type Timings } from '../timing.server';
 export type ProviderUser = {
   id: string | number;
   email: string;
-  username?: string;
   name?: string;
   imageUrl?: string;
 };
@@ -24,6 +23,3 @@ export interface AuthProvider {
 }
 
 export const normalizeEmail = (s: string) => s.toLowerCase();
-
-export const normalizeUsername = (s: string) =>
-  s.replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();

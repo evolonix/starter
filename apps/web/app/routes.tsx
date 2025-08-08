@@ -13,11 +13,17 @@ export default [
     route('inbox', './routes/inbox.tsx'),
     route('support', './routes/support.tsx'),
     route('changelog', './routes/changelog.tsx'),
-    route('profile', './routes/profile.tsx'),
+    ...prefix('profile', [
+      index('./routes/profile/profile.tsx'),
+      route('edit', './routes/profile/edit.tsx'),
+    ]),
     route('settings', './routes/settings.tsx'),
     route('privacy', './routes/privacy.tsx'),
     route('feedback', './routes/feedback.tsx'),
-    ...prefix('admin', [route('settings', './routes/admin/settings.tsx')]),
+    ...prefix('admin', [
+      route('users/:id?/edit?', './routes/admin/users/users.tsx'),
+      route('settings', './routes/admin/settings.tsx'),
+    ]),
     ...prefix('cdk', [
       index('./routes/cdk/dashboard.tsx'),
       route('grid-layout', './routes/cdk/grid-layout.tsx'),

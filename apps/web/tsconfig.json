@@ -3,6 +3,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/manage-list/feature"
+    },
+    {
       "path": "../../libs/features/feature-flags"
     },
     {

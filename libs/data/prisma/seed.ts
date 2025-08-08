@@ -7,14 +7,12 @@ const prisma = new PrismaClient();
 const userData: Prisma.UserCreateInput[] = [
   {
     email: 'alice@prisma.io',
-    username: 'alice',
     name: 'Alice',
     password: { create: createPassword('password') },
     roles: { connect: [{ name: 'user' }] },
   },
   {
     email: 'bob@prisma.io',
-    username: 'bob',
     name: 'Bob',
     password: { create: createPassword('password') },
     roles: { connect: [{ name: 'user' }] },
@@ -41,7 +39,6 @@ export async function main() {
   await prisma.user.create({
     data: {
       email: 'jason@evolonix.com',
-      username: 'jason',
       name: 'Jason',
       password: { create: createPassword('password') },
       roles: {
