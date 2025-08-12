@@ -1,6 +1,7 @@
 import * as Headless from '@headlessui/react';
 import clsx from 'clsx';
 import React, { forwardRef } from 'react';
+import { twMerge } from 'tailwind-merge';
 import { TouchTarget } from './button';
 import { Link } from './link';
 
@@ -26,7 +27,7 @@ export function Avatar({
     <span
       data-slot="avatar"
       {...props}
-      className={clsx(
+      className={twMerge(
         className,
         // Basic layout
         'inline-grid shrink-0 align-middle [--avatar-radius:20%] *:col-start-1 *:row-start-1',
@@ -37,11 +38,7 @@ export function Avatar({
         square
           ? 'rounded-(--avatar-radius) *:rounded-(--avatar-radius)'
           : 'rounded-full *:rounded-full',
-        src
-          ? 'bg-white'
-          : initials
-            ? 'bg-cyan-500 text-zinc-950 dark:bg-cyan-400'
-            : '',
+        !src && initials ? 'bg-cyan-500 text-zinc-950 dark:bg-cyan-400' : '',
       )}
     >
       {src ? (

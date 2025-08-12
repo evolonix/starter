@@ -13,7 +13,7 @@ export const CdkDashboard = () => {
         <GridLayoutItem>
           <Link
             href="/cdk/grid-layout"
-            className="text-blue-600 hover:underline"
+            className="flex items-center gap-3 text-zinc-950 dark:text-white forced-colors:text-[CanvasText]"
           >
             Grid layout
           </Link>

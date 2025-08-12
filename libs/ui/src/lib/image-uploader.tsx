@@ -1,3 +1,4 @@
+import { UserIcon } from '@heroicons/react/24/solid';
 import React, {
   forwardRef,
   useEffect,
@@ -6,13 +7,9 @@ import React, {
   useState,
 } from 'react';
 
-const MISSING_IMAGE =
-  'data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTYgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0ibSA0IDEgYyAtMS42NDQ1MzEgMCAtMyAxLjM1NTQ2OSAtMyAzIHYgMSBoIDEgdiAtMSBjIDAgLTEuMTA5Mzc1IDAuODkwNjI1IC0yIDIgLTIgaCAxIHYgLTEgeiBtIDIgMCB2IDEgaCA0IHYgLTEgeiBtIDUgMCB2IDEgaCAxIGMgMS4xMDkzNzUgMCAyIDAuODkwNjI1IDIgMiB2IDEgaCAxIHYgLTEgYyAwIC0xLjY0NDUzMSAtMS4zNTU0NjkgLTMgLTMgLTMgeiBtIC01IDQgYyAtMC41NTA3ODEgMCAtMSAwLjQ0OTIxOSAtMSAxIHMgMC40NDkyMTkgMSAxIDEgcyAxIC0wLjQ0OTIxOSAxIC0xIHMgLTAuNDQ5MjE5IC0xIC0xIC0xIHogbSAtNSAxIHYgNCBoIDEgdiAtNCB6IG0gMTMgMCB2IDQgaCAxIHYgLTQgeiBtIC00LjUgMiBsIC0yIDIgbCAtMS41IC0xIGwgLTIgMiB2IDAuNSBjIDAgMC41IDAuNSAwLjUgMC41IDAuNSBoIDcgcyAwLjQ3MjY1NiAtMC4wMzUxNTYgMC41IC0wLjUgdiAtMSB6IG0gLTguNSAzIHYgMSBjIDAgMS42NDQ1MzEgMS4zNTU0NjkgMyAzIDMgaCAxIHYgLTEgaCAtMSBjIC0xLjEwOTM3NSAwIC0yIC0wLjg5MDYyNSAtMiAtMiB2IC0xIHogbSAxMyAwIHYgMSBjIDAgMS4xMDkzNzUgLTAuODkwNjI1IDIgLTIgMiBoIC0xIHYgMSBoIDEgYyAxLjY0NDUzMSAwIDMgLTEuMzU1NDY5IDMgLTMgdiAtMSB6IG0gLTggMyB2IDEgaCA0IHYgLTEgeiBtIDAgMCIgZmlsbD0iIzJlMzQzNCIgZmlsbC1vcGFjaXR5PSIwLjM0OTAyIi8+Cjwvc3ZnPgo=';
-
 interface ImageUploaderProps {
   name?: string;
   initialImageUrl?: string;
-  missingImage?: string;
   onChange?: (url: string) => void;
 }
 
@@ -22,9 +19,9 @@ export interface ImageUploaderRef {
 }
 
 export const ImageUploader = forwardRef<ImageUploaderRef, ImageUploaderProps>(
-  ({ name, initialImageUrl, missingImage, onChange }, ref) => {
+  ({ name, initialImageUrl, onChange }, ref) => {
     const [imageSrc, setImageSrc] = useState<string | undefined>(
-      initialImageUrl || missingImage || MISSING_IMAGE,
+      initialImageUrl,
     );
     const [file, setFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -73,7 +70,7 @@ export const ImageUploader = forwardRef<ImageUploaderRef, ImageUploaderProps>(
     }, []);
 
     return (
-      <div className="relative size-48 cursor-pointer overflow-hidden rounded-lg">
+      <div className="relative size-48 cursor-pointer">
         <div
           tabIndex={0}
           onClick={handleImageClick}
@@ -84,15 +81,19 @@ export const ImageUploader = forwardRef<ImageUploaderRef, ImageUploaderProps>(
           onMouseLeave={() => setIsHovered(false)}
           onFocus={() => setIsHovered(true)}
           onBlur={() => setIsHovered(false)}
-          className="relative size-full bg-white"
+          className="relative size-full"
         >
-          <img
-            src={imageSrc}
-            alt="Uploadable preview"
-            className="h-full w-full object-cover"
-          />
+          {imageSrc ? (
+            <img
+              src={imageSrc}
+              alt="Uploadable preview"
+              className="size-full rounded-lg bg-zinc-100 object-cover text-zinc-950 dark:bg-zinc-800 dark:text-white"
+            />
+          ) : (
+            <UserIcon className="size-full rounded-lg bg-zinc-100 text-zinc-950 dark:bg-zinc-800 dark:text-white" />
+          )}
           {isHovered && (
-            <div className="absolute inset-0 flex items-center justify-center bg-zinc-950/75 text-center text-lg font-bold text-white">
+            <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-zinc-950/75 text-center text-lg font-bold text-white">
               Upload an image
             </div>
           )}

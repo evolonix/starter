@@ -7,6 +7,7 @@ import {
   MagnifyingGlassIcon,
   QuestionMarkCircleIcon,
   SparklesIcon,
+  UsersIcon,
 } from '@heroicons/react/16/solid';
 import clsx from 'clsx';
 import { useCallback } from 'react';
@@ -99,6 +100,14 @@ export const LayoutSidebar = ({
             <HomeIcon />
             <SidebarLabel>Home</SidebarLabel>
           </SidebarItem>
+          <SidebarItem
+            href="/users"
+            title={isExpanded ? undefined : 'Users'}
+            current={isCurrent('/users')}
+          >
+            <UsersIcon />
+            <SidebarLabel>Users</SidebarLabel>
+          </SidebarItem>
         </SidebarSection>
         <SidebarSpacer />
         <SidebarSection hidden={!isDeveloper}>
@@ -131,7 +140,7 @@ export const LayoutSidebar = ({
             title={isExpanded ? undefined : 'Users'}
             current={isCurrent('/admin/users')}
           >
-            <Cog6ToothIcon />
+            <UsersIcon />
             <SidebarLabel>Users</SidebarLabel>
           </SidebarItem>
           <SidebarItem

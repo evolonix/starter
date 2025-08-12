@@ -11,12 +11,13 @@ export default [
     index('./routes/home.tsx'),
     route('search', './routes/search.tsx'),
     route('inbox', './routes/inbox.tsx'),
+    ...prefix('users', [
+      index('./routes/users/dashboard.tsx'),
+      route(':id', './routes/users/user.tsx'),
+    ]),
     route('support', './routes/support.tsx'),
     route('changelog', './routes/changelog.tsx'),
-    ...prefix('profile', [
-      index('./routes/profile/profile.tsx'),
-      route('edit', './routes/profile/edit.tsx'),
-    ]),
+    ...prefix('profile', [route(':edit?', './routes/profile.tsx')]),
     route('settings', './routes/settings.tsx'),
     route('privacy', './routes/privacy.tsx'),
     route('feedback', './routes/feedback.tsx'),

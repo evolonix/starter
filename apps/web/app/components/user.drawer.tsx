@@ -19,9 +19,7 @@ import {
 import { useRef } from 'react';
 import { FetcherWithComponents } from 'react-router';
 import z from 'zod';
-import { getUserImgSrc } from '../../../utils/misc';
-
-import missingImage from '../../../assets/missing-image.png';
+import { getUserImgSrc } from '../utils/misc';
 
 export const UserSchema = z.object({
   id: z.string(),
@@ -108,7 +106,6 @@ export const UserDrawer = ({
             ref={uploaderRef}
             name={fields.image.name}
             initialImageUrl={getUserImgSrc(user?.image?.objectKey)}
-            missingImage={missingImage}
           />
           <Field>
             <Label>Email</Label>
@@ -117,6 +114,7 @@ export const UserDrawer = ({
               placeholder="john.doe@example.com"
               defaultValue={fields.email.value}
               required
+              autoFocus
             />
             {fields.email.errors ? (
               <ErrorMessage>{fields.email.errors}</ErrorMessage>
@@ -129,7 +127,6 @@ export const UserDrawer = ({
               placeholder="John Doe"
               defaultValue={fields.name.value}
               required
-              autoFocus
             />
             {fields.name.errors ? (
               <ErrorMessage>{fields.name.errors}</ErrorMessage>

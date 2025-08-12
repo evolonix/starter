@@ -1,9 +1,11 @@
+import { UserIcon } from '@heroicons/react/24/solid';
 import { User, UserImage } from '@prisma/client';
 import {
   Details,
   DetailsActions,
   DetailsBody,
   DetailsBodySkeleton,
+  DetailsFooter,
   DetailsHeader,
   DetailsHeaderSkeleton,
   DetailsTitle,
@@ -12,6 +14,7 @@ import {
   DescriptionDetails,
   DescriptionList,
   DescriptionTerm,
+  Text,
 } from '@~~_starter.name_~~/ui';
 import { useParams } from 'react-router';
 import { getUserImgSrc } from '../../../utils/misc';
@@ -30,15 +33,18 @@ export const UserDetails = ({
   const { id } = useParams();
 
   return !id || (id === 'new' && !user) ? (
-    <>
-      <div className="flex h-9 items-center justify-between">
-        <h2 className="font-bold">Users</h2>
-      </div>
-      <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-        Explore the various users of this app. Click on a user to learn more
-        about them.
-      </p>
-    </>
+    <Details>
+      <DetailsHeader>
+        <DetailsTitle>Manage users</DetailsTitle>
+      </DetailsHeader>
+      <DetailsBody>
+        <Text>
+          Manage users of the application. Select a user from the list or add a
+          new user.
+        </Text>
+      </DetailsBody>
+      <DetailsFooter />
+    </Details>
   ) : (
     <Details entity={user}>
       {isLoading && !user ? (
@@ -60,16 +66,21 @@ export const UserDetails = ({
           <DetailsBody
             className={id !== user.id && id !== 'new' ? 'animate-pulse' : ''}
           >
-            <img
-              src={getUserImgSrc(user.image?.objectKey)}
-              alt={user.image?.altText ?? user.name}
-              className="size-48 rounded-lg bg-white object-cover"
-            />
+            {user.image ? (
+              <img
+                src={getUserImgSrc(user.image?.objectKey)}
+                alt={user.image?.altText ?? user.name}
+                className="size-48 rounded-lg bg-zinc-100 object-cover text-zinc-950 dark:bg-zinc-800 dark:text-white"
+              />
+            ) : (
+              <UserIcon className="size-48 rounded-lg bg-zinc-100 text-zinc-950 dark:bg-zinc-800 dark:text-white" />
+            )}
             <DescriptionList>
               <DescriptionTerm>Email:</DescriptionTerm>
               <DescriptionDetails>{user.email}</DescriptionDetails>
             </DescriptionList>
           </DetailsBody>
+          <DetailsFooter />
         </>
       ) : null}
     </Details>

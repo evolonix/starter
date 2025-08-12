@@ -79,13 +79,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
           id: true,
           name: true,
           email: true,
-          image: { select: { objectKey: true } },
+          createdAt: true,
+          updatedAt: true,
+          image: true,
           roles: {
-            select: {
-              name: true,
-              permissions: {
-                select: { entity: true, action: true, access: true },
-              },
+            include: {
+              permissions: true,
             },
           },
         },

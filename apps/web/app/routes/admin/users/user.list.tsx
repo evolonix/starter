@@ -23,9 +23,9 @@ interface UserListProps {
   list: (User & { image: UserImage | null })[];
   query: string;
   pagination?: PaginationDetails;
-  onSearch: (query?: string) => void;
-  onPreviousPage: () => void;
-  onNextPage: () => void;
+  onSearch?: (query?: string) => void;
+  onPreviousPage?: () => void;
+  onNextPage?: () => void;
 }
 
 export const UserList = ({
@@ -41,12 +41,14 @@ export const UserList = ({
   return (
     <List>
       <ListHeader>
-        <Search
-          initialQuery={query}
-          disabled={isLoading}
-          autoFocus
-          onSearch={onSearch}
-        />
+        {onSearch ? (
+          <Search
+            initialQuery={query}
+            disabled={isLoading}
+            autoFocus
+            onSearch={onSearch}
+          />
+        ) : null}
       </ListHeader>
       {showSkeleton ? (
         <ListBodySkeleton />
@@ -58,30 +60,41 @@ export const UserList = ({
               to={`/admin/users/${user.id}`}
               divider={index < list.length - 1}
             >
-              <Avatar
-                src={getUserImgSrc(user.image?.objectKey)}
-                initials={user?.name?.charAt(0)}
-                className="size-10"
-                square
-                alt={user?.name}
-              />
-              <span className="truncate">{user.name}</span>
+              <span className="flex min-w-0 items-center gap-3">
+                <Avatar
+                  src={getUserImgSrc(user.image?.objectKey)}
+                  initials={user.name?.charAt(0)}
+                  className="size-10 bg-zinc-100 dark:bg-zinc-800"
+                  square
+                  alt={user?.name}
+                />
+                <span className="min-w-0">
+                  <span className="block truncate text-sm/5 font-medium">
+                    {user.name}
+                  </span>
+                  <span className="block truncate text-xs/5 font-normal text-zinc-600 dark:text-zinc-400">
+                    {user.email}
+                  </span>
+                </span>
+              </span>
             </ListItem>
           ))}
           {list.length === 0 && <li className="py-4">No users found.</li>}
         </ListBody>
       )}
       <ListFooter>
-        <Pagination>
-          <PaginationPrevious
-            disabled={isLoading || !pagination?.prev}
-            onClick={onPreviousPage}
-          />
-          <PaginationNext
-            disabled={isLoading || !pagination?.next}
-            onClick={onNextPage}
-          />
-        </Pagination>
+        {pagination ? (
+          <Pagination>
+            <PaginationPrevious
+              disabled={isLoading || !pagination?.prev}
+              onClick={onPreviousPage}
+            />
+            <PaginationNext
+              disabled={isLoading || !pagination?.next}
+              onClick={onNextPage}
+            />
+          </Pagination>
+        ) : null}
       </ListFooter>
     </List>
   );

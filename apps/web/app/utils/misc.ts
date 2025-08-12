@@ -5,7 +5,7 @@ import { useSpinDelay } from 'spin-delay';
 export function getUserImgSrc(objectKey?: string | null) {
   return objectKey
     ? `/resources/images?objectKey=${encodeURIComponent(objectKey)}`
-    : '/user.png';
+    : undefined;
 }
 
 export function getErrorMessage(error: unknown) {

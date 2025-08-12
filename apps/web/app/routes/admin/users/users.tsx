@@ -1,6 +1,6 @@
 import { parseWithZod } from '@conform-to/zod';
 import { User, UserImage } from '@prisma/client';
-import { ManageList, PaginationDetails } from '@~~_starter.name_~~/manage-list';
+import { ManageList } from '@~~_starter.name_~~/manage-list';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActionFunctionArgs,
@@ -12,9 +12,9 @@ import {
   useParams,
 } from 'react-router';
 import z from 'zod';
+import { UserDrawer, UserSchema } from '../../../components/user.drawer';
 import { prisma } from '../../../utils/db.server';
 import { UserDetails } from './user.details';
-import { UserDrawer, UserSchema } from './user.drawer';
 import { UserList } from './user.list';
 
 export async function loader() {
@@ -23,11 +23,9 @@ export async function loader() {
       image: true,
     },
   });
-  const pagination: PaginationDetails | undefined = undefined;
 
   return data({
     usersWithImages,
-    pagination,
   });
 }
 
@@ -85,7 +83,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export const AdminUsers = () => {
-  const { usersWithImages: list, pagination } = useLoaderData<typeof loader>();
+  const { usersWithImages: list } = useLoaderData<typeof loader>();
   const { id } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -114,19 +112,6 @@ export const AdminUsers = () => {
   const search = (query?: string) => {
     setQuery(query ?? '');
   };
-
-  const previousPage = useCallback(() => {
-    // setPagination((prev) => ({
-    //   ...prev,
-    //   page: (prev?.page || 1) - 1,
-    // }));
-  }, []);
-  const nextPage = useCallback(() => {
-    // setPagination((prev) => ({
-    //   ...prev,
-    //   page: (prev?.page || 1) + 1,
-    // }));
-  }, []);
 
   useEffect(() => {
     const handleAdd = () => {
@@ -173,7 +158,7 @@ export const AdminUsers = () => {
     <>
       <ManageList
         // isLoading={vm.isLoading}
-        label="Manage Users"
+        label="Users"
         newUrl="/admin/users/new"
         list={
           <UserList
@@ -181,10 +166,7 @@ export const AdminUsers = () => {
             // isLoading={vm.isLoading}
             list={list}
             query={query}
-            pagination={pagination}
             onSearch={search}
-            onPreviousPage={previousPage}
-            onNextPage={nextPage}
           />
         }
         details={
@@ -201,7 +183,7 @@ export const AdminUsers = () => {
         isOpen={showDrawer}
         fetcher={fetcher}
         onClose={handleDrawerClose}
-        onSave={() => setShowDrawer(false)}
+        onSave={handleDrawerClose}
       />
     </>
   );
