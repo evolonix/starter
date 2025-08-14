@@ -1,4 +1,4 @@
-import { getFormProps, SubmissionResult, useForm } from '@conform-to/react';
+import { getFormProps, useForm } from '@conform-to/react';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import { User, UserImage } from '@prisma/client';
 import {
@@ -17,7 +17,7 @@ import {
   Label,
 } from '@~~_starter.name_~~/ui';
 import { useRef } from 'react';
-import { FetcherWithComponents } from 'react-router';
+import { useFetcher } from 'react-router';
 import z from 'zod';
 import { getUserImgSrc } from '../utils/misc';
 
@@ -39,26 +39,12 @@ export const UserSchema = z.object({
 interface UserDrawerProps {
   user?: User & { image: UserImage | null };
   isOpen: boolean;
-  fetcher: FetcherWithComponents<
-    | {
-        result: SubmissionResult<string[]>;
-      }
-    | {
-        result: SubmissionResult<string[]>;
-      }
-  >;
   onClose: (value: boolean) => void;
-  onSave: () => void;
 }
 
-export const UserDrawer = ({
-  user,
-  isOpen,
-  fetcher,
-  onClose,
-  onSave,
-}: UserDrawerProps) => {
+export const UserDrawer = ({ user, isOpen, onClose }: UserDrawerProps) => {
   const uploaderRef = useRef<ImageUploaderRef>(null);
+  const fetcher = useFetcher();
 
   const [form, fields] = useForm({
     id: user?.id ? `edit-user-${user.id}` : 'new-user',
@@ -74,18 +60,13 @@ export const UserDrawer = ({
     },
   });
 
-  const { onSubmit, ...formProps } = getFormProps(form);
-
   return (
     <Drawer preventCloseOnOutsideClick open={isOpen} close={onClose}>
       <fetcher.Form
         method="POST"
         className="flex flex-col gap-8"
-        {...formProps}
-        onSubmit={(e) => {
-          onSubmit(e);
-          onSave();
-        }}
+        {...getFormProps(form)}
+        action={`/admin/users/${user?.id}`}
       >
         <DrawerHeader>
           <DrawerTitle>{`${user ? 'Edit' : 'New'} user`}</DrawerTitle>

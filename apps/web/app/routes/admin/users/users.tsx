@@ -18,20 +18,20 @@ import { UserDetails } from './user.details';
 import { UserList } from './user.list';
 
 export async function loader() {
-  const usersWithImages = await prisma.user.findMany({
+  const users = await prisma.user.findMany({
     include: {
       image: true,
     },
   });
 
   return data({
-    usersWithImages,
+    users,
   });
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const id = formData.get('id') as string;
+  let id = formData.get('id') as string;
 
   const submission = await parseWithZod(formData, {
     async: true,
@@ -68,14 +68,21 @@ export async function action({ request }: ActionFunctionArgs) {
       },
     });
   } else {
-    await prisma.user.create({
-      select: { name: true, email: true },
+    const created = await prisma.user.create({
+      select: { id: true },
       data: {
         name: name,
         email: email,
       },
     });
+    id = created.id;
   }
+
+  // if (id) {
+  //   await prisma.user.delete({
+  //     where: { id },
+  //   });
+  // }
 
   return {
     result: submission.reply(),
@@ -83,7 +90,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export const AdminUsers = () => {
-  const { usersWithImages: list } = useLoaderData<typeof loader>();
+  const { users: list } = useLoaderData<typeof loader>();
   const { id } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -97,12 +104,15 @@ export const AdminUsers = () => {
   );
   const fetcher = useFetcher<typeof action>();
 
-  const handleDelete = useCallback(() => {
+  const handleDelete = useCallback(async () => {
     if (selected?.id) {
-      // vm.delete(selected.id);
+      await fetcher.submit(null, {
+        method: 'POST',
+        action: `/admin/users/${selected.id}`,
+      });
       navigate('/admin/users', { replace: true });
     }
-  }, [selected, navigate]);
+  }, [selected, fetcher, navigate]);
 
   const handleDrawerClose = useCallback(() => {
     setShowDrawer(false);
@@ -128,62 +138,27 @@ export const AdminUsers = () => {
     if (pathname.endsWith('/edit') && selected) handleEdit();
   }, [id, pathname, selected]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     await vm.loadPaged(vm.page, vm.query);
-  //   })();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [vm.page, vm.query]);
-
   useEffect(() => {
     if (id === 'new') return;
 
-    // (async () => {
-    //   await vm.select(id);
-    // })();
     const user = list.find((u) => u.id === id);
     setSelected(user);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // const [isClient, setIsClient] = useState(false);
-
-  // useEffect(() => {
-  //   setIsClient(true);
-  // }, []);
-
-  // if (!isClient) return null; // Don't render on the server
-
   return (
     <>
       <ManageList
-        // isLoading={vm.isLoading}
         label="Users"
         newUrl="/admin/users/new"
-        list={
-          <UserList
-            // showSkeleton={vm.showSkeleton}
-            // isLoading={vm.isLoading}
-            list={list}
-            query={query}
-            onSearch={search}
-          />
-        }
-        details={
-          <UserDetails
-            // isLoading={isLoading}
-            user={selected}
-            onDelete={handleDelete}
-          />
-        }
+        list={<UserList list={list} query={query} onSearch={search} />}
+        details={<UserDetails user={selected} onDelete={handleDelete} />}
       />
 
       <UserDrawer
         user={user.current}
         isOpen={showDrawer}
-        fetcher={fetcher}
         onClose={handleDrawerClose}
-        onSave={handleDrawerClose}
       />
     </>
   );
