@@ -1,4 +1,4 @@
-import { useForm } from '@conform-to/react';
+import { getFormProps, useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 import { z } from 'zod';
 
@@ -11,10 +11,9 @@ import {
   Label,
   Link,
   Logo,
-  Strong,
   Text,
-  TextLink,
 } from '@~~_starter.name_~~/ui';
+import { Form } from 'react-router';
 
 const schema = z.object({
   email: z
@@ -39,16 +38,15 @@ export const ForgotPassword = () => {
         data[key] = value.toString();
       });
       console.log('Form submitted:', data);
+      // TODO: Handle form submission, e.g., send a request to reset the password
     },
   });
 
   return (
-    <form
-      id={form.id}
+    <Form
       method="POST"
+      {...getFormProps(form)}
       className="grid w-full max-w-sm grid-cols-1 gap-8"
-      noValidate={form.noValidate}
-      onSubmit={form.onSubmit}
     >
       <Link
         href="/"
@@ -76,13 +74,13 @@ export const ForgotPassword = () => {
       <Button type="submit" className="w-full">
         Reset password
       </Button>
-      <Text>
+      {/* <Text>
         Don't have an account?{' '}
         <TextLink href="../register">
           <Strong>Sign up</Strong>
         </TextLink>
-      </Text>
-    </form>
+      </Text> */}
+    </Form>
   );
 };
 

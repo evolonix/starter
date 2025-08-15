@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["@react-router/node", "vite/client", "node"],
     "esModuleInterop": true,
     "jsx": "react-jsx",
@@ -50,6 +50,9 @@
     "eslint.config.mjs"
   ],
   "references": [
+    {
+      "path": "../../libs/manage-list/feature/tsconfig.lib.json"
+    },
     {
       "path": "../../libs/features/feature-flags/tsconfig.lib.json"
     },

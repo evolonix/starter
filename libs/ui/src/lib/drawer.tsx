@@ -4,7 +4,7 @@ import * as Headless from '@headlessui/react';
 import clsx from 'clsx';
 import type React from 'react';
 import { useRef } from 'react';
-import { NavbarItem, Text } from './catalyst';
+import { Heading, NavbarItem, Text } from './catalyst';
 
 const sizes = {
   xs: 'sm:max-w-xs',
@@ -115,15 +115,13 @@ export function DrawerTitle({
   'children'
 >) {
   return (
-    <h2
+    <Heading
+      level={2}
       {...props}
-      className={clsx(
-        className,
-        'text-lg font-semibold text-zinc-950 dark:text-white',
-      )}
+      className={clsx(className, 'text-zinc-950 dark:text-white')}
     >
       {children}
-    </h2>
+    </Heading>
   );
 }
 

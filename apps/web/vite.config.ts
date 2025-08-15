@@ -16,6 +16,7 @@ export default defineConfig(() => ({
     host: 'localhost',
   },
   plugins: [
+    // !process.env.VITEST && reactRouterDevTools(),
     !process.env.VITEST && reactRouter(),
     tailwindcss(),
     tsconfigPaths(),
@@ -42,5 +43,8 @@ export default defineConfig(() => ({
       reportsDirectory: './test-output/vitest/coverage',
       provider: 'v8' as const,
     },
+  },
+  ssr: {
+    noExternal: ['@apollo/client'],
   },
 }));

@@ -17,6 +17,15 @@
     },
     {
       "path": "./libs/examples/rick-and-morty/data-access"
+    },
+    {
+      "path": "./libs/data"
+    },
+    {
+      "path": "./libs/manage-list/feature"
+    },
+    {
+      "path": "./libs/util"
     }
   ]
 }

@@ -1,0 +1,38 @@
+import { redirect } from 'react-router';
+import { safeRedirect } from 'remix-utils/safe-redirect';
+import { sessionKey } from '../../utils/auth.server';
+import { combineResponseInits } from '../../utils/misc';
+import { authSessionStorage } from '../../utils/session.server';
+
+export async function handleNewSession(
+  {
+    request,
+    session,
+    redirectTo,
+    remember,
+  }: {
+    request: Request;
+    session: { userId: string; id: string; expirationDate: Date };
+    redirectTo?: string;
+    remember: boolean;
+  },
+  responseInit?: ResponseInit,
+) {
+  const authSession = await authSessionStorage.getSession(
+    request.headers.get('cookie'),
+  );
+  authSession.set(sessionKey, session.id);
+  return redirect(
+    safeRedirect(redirectTo),
+    combineResponseInits(
+      {
+        headers: {
+          'set-cookie': await authSessionStorage.commitSession(authSession, {
+            expires: remember ? session.expirationDate : undefined,
+          }),
+        },
+      },
+      responseInit,
+    ),
+  );
+}

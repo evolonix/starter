@@ -1,4 +1,4 @@
-import { useForm } from '@conform-to/react';
+import { getFormProps, useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 import { z } from 'zod';
 
@@ -13,19 +13,24 @@ import {
   Label,
   Link,
   Logo,
+  Select,
   Strong,
   Text,
   TextLink,
 } from '@~~_starter.name_~~/ui';
+import { Form } from 'react-router';
 
 const schema = z.object({
   email: z
     .string({ required_error: 'Email is required' })
     .email('Invalid email address'),
+  name: z.string({ required_error: 'Full name is required' }),
   password: z.string({ required_error: 'Password is required' }),
+  country: z.string({ required_error: 'Country is required' }),
+  subscribe: z.boolean().optional(),
 });
 
-export const Login = () => {
+export const Register = () => {
   const [form, fields] = useForm({
     shouldValidate: 'onSubmit',
     shouldRevalidate: 'onBlur',
@@ -42,16 +47,15 @@ export const Login = () => {
         data[key] = value.toString();
       });
       console.log('Form submitted:', data);
+      // TODO: Handle form submission, e.g., send a request to create a new account
     },
   });
 
   return (
-    <form
-      id={form.id}
+    <Form
       method="POST"
+      {...getFormProps(form)}
       className="grid w-full max-w-sm grid-cols-1 gap-8"
-      noValidate={form.noValidate}
-      onSubmit={form.onSubmit}
     >
       <Link
         href="/"
@@ -60,7 +64,7 @@ export const Login = () => {
         <Logo className="size-7 sm:size-6" />
         <span className="truncate">~~_starter.display_name_~~</span>
       </Link>
-      <Heading>Sign in to your account</Heading>
+      <Heading>Create your account</Heading>
       <Field>
         <Label>Email</Label>
         <Input
@@ -74,9 +78,21 @@ export const Login = () => {
         ) : null}
       </Field>
       <Field>
+        <Label>Full name</Label>
+        <Input
+          name={fields.name.name}
+          required={fields.name.required}
+          invalid={!!fields.name.errors}
+        />
+        {fields.name.errors ? (
+          <ErrorMessage>{fields.name.errors}</ErrorMessage>
+        ) : null}
+      </Field>
+      <Field>
         <Label>Password</Label>
         <Input
           type="password"
+          autoComplete="new-password"
           name={fields.password.name}
           required={fields.password.required}
           invalid={!!fields.password.errors}
@@ -85,28 +101,37 @@ export const Login = () => {
           <ErrorMessage>{fields.password.errors}</ErrorMessage>
         ) : null}
       </Field>
-      <div className="flex items-center justify-between">
-        <CheckboxField>
-          <Checkbox name="remember" />
-          <Label>Remember me</Label>
-        </CheckboxField>
-        <Text>
-          <TextLink href="../forgot-password">
-            <Strong>Forgot password?</Strong>
-          </TextLink>
-        </Text>
-      </div>
+      <Field>
+        <Label>Country</Label>
+        <Select
+          name={fields.country.name}
+          required={fields.country.required}
+          invalid={!!fields.country.errors}
+          defaultValue="United States"
+        >
+          <option>Canada</option>
+          <option>Mexico</option>
+          <option>United States</option>
+        </Select>
+        {fields.country.errors ? (
+          <ErrorMessage>{fields.country.errors}</ErrorMessage>
+        ) : null}
+      </Field>
+      <CheckboxField>
+        <Checkbox name={fields.subscribe.name} />
+        <Label>Get emails about product updates and news.</Label>
+      </CheckboxField>
       <Button type="submit" className="w-full">
-        Login
+        Create account
       </Button>
       <Text>
-        Don't have an account?{' '}
-        <TextLink href="../register">
-          <Strong>Sign up</Strong>
+        Already have an account?{' '}
+        <TextLink href="../login">
+          <Strong>Sign in</Strong>
         </TextLink>
       </Text>
-    </form>
+    </Form>
   );
 };
 
-export default Login;
+export default Register;
