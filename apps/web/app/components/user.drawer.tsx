@@ -17,7 +17,7 @@ import {
   Label,
 } from '@~~_starter.name_~~/ui';
 import { useRef } from 'react';
-import { useFetcher } from 'react-router';
+import { FetcherWithComponents } from 'react-router';
 import z from 'zod';
 import { getUserImgSrc } from '../utils/misc';
 
@@ -38,13 +38,20 @@ export const UserSchema = z.object({
 
 interface UserDrawerProps {
   user?: User & { image: UserImage | null };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fetcher: FetcherWithComponents<any>;
   isOpen: boolean;
   onClose: (value: boolean) => void;
 }
 
-export const UserDrawer = ({ user, isOpen, onClose }: UserDrawerProps) => {
+export const UserDrawer = ({
+  user,
+  fetcher,
+  isOpen,
+  onClose,
+}: UserDrawerProps) => {
   const uploaderRef = useRef<ImageUploaderRef>(null);
-  const fetcher = useFetcher();
+  // const fetcher = useFetcher();
 
   const [form, fields] = useForm({
     id: user?.id ? `edit-user-${user.id}` : 'new-user',

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActionFunctionArgs,
   data,
+  redirect,
   useFetcher,
   useLoaderData,
   useLocation,
@@ -84,9 +85,11 @@ export async function action({ request }: ActionFunctionArgs) {
   //   });
   // }
 
-  return {
-    result: submission.reply(),
-  };
+  // return {
+  //   result: submission.reply(),
+  // };
+
+  return redirect(`/admin/users/${id}`);
 }
 
 export const AdminUsers = () => {
@@ -124,18 +127,14 @@ export const AdminUsers = () => {
   };
 
   useEffect(() => {
-    const handleAdd = () => {
-      user.current = undefined;
-      setShowDrawer(true);
-    };
-
-    const handleEdit = () => {
+    const addOrEdit = (selected?: User & { image: UserImage | null }) => {
       user.current = selected;
       setShowDrawer(true);
     };
 
-    if (id === 'new') handleAdd();
-    if (pathname.endsWith('/edit') && selected) handleEdit();
+    if (id === 'new') addOrEdit();
+    else if (pathname.endsWith('/edit') && selected) addOrEdit(selected);
+    else setShowDrawer(false);
   }, [id, pathname, selected]);
 
   useEffect(() => {
@@ -157,6 +156,7 @@ export const AdminUsers = () => {
 
       <UserDrawer
         user={user.current}
+        fetcher={fetcher}
         isOpen={showDrawer}
         onClose={handleDrawerClose}
       />
