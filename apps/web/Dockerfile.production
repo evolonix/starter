@@ -9,54 +9,69 @@
 ARG NODE_VERSION=24.5.0
 FROM node:${NODE_VERSION}-slim AS base
 
-# Install Python and pip, clean up apt cache
-RUN apt-get update && apt-get install -y python3 python3-pip \
-    && rm -rf /var/lib/apt/lists/*
+LABEL fly_launch_runtime="Node.js/Prisma"
 
-# Install LiteFS dependencies
-RUN apt-get update -y && apt-get install -y ca-certificates fuse3 sqlite3
-
-# Node.js app lives here
+# Node.js/Prisma app lives here
 WORKDIR /app
+
+# Set environment
+ENV NODE_ENV="staging"
 
 
 # Throw-away build stage to reduce size of final image
 FROM base AS build
 
-# Copy application code
-COPY --link . .
+# Install packages needed to build node modules
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential node-gyp openssl pkg-config python-is-python3
 
 # Install node modules
-# RUN npm ci --ignore-scripts # TODO: Use this instead of the following after Nx fixes the release script issue of updating the package-lock.json file
-RUN npm install --ignore-scripts
+COPY package-lock.json package.json ./
+RUN npm ci --ignore-scripts
 
-# Set environment
-ARG VITE_FLAGSMITH_ENVIRONMENT_ID
-ENV VITE_FLAGSMITH_ENVIRONMENT_ID=$VITE_FLAGSMITH_ENVIRONMENT_ID
-ENV NODE_ENV="production"
+# Copy application code
+COPY . .
+
 # Not sure why, but this is needed for Nx graph to work
 ENV NX_DAEMON=false
 
 # Build the application
-RUN npx nx build web --mode production
+# Prisma Client is generated as a dependent step to build
+RUN npx nx build web --mode staging
 
 
 # Final stage for app image
 FROM base
 
+# Install packages needed for deployment
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y ca-certificates openssl wget && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Install litestream
+RUN wget https://github.com/benbjohnson/litestream/releases/download/v0.3.13/litestream-v0.3.13-linux-amd64.deb && \
+    dpkg -i litestream-v0.3.13-linux-amd64.deb && \
+    rm litestream-v0.3.13-linux-amd64.deb
+
 # Copy built application
 COPY --from=build /app/apps/web/package.json /app
+COPY --from=build /app/apps/web/docker-entrypoint.js /app
+COPY --from=build /app/apps/web/litestream.yml /app
 COPY --from=build /app/apps/web/build /app/build
 RUN npm install --omit=dev
 
+# Copy Prisma Client and prisma schema and migrations
 COPY --from=build /app/node_modules/.prisma /app/node_modules/.prisma
 COPY --from=build /app/libs/data/prisma /app/prisma
 
-# Prepare for LiteFS
-# COPY --from=flyio/litefs:0.5 /usr/local/bin/litefs /usr/local/bin/litefs
-# COPY --from=build /app/apps/web/litefs.yml /etc/litefs.yml
+# Setup sqlite3 on a separate volume
+RUN mkdir -p /data
+VOLUME /data
+
+# Entrypoint prepares the database.
+ENTRYPOINT [ "/app/docker-entrypoint.js" ]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-# CMD [ "litefs", "mount" ]
-CMD [ "npm", "start" ]
+ENV DATABASE_URL="file:///data/sqlite.db"
+CMD [ "npx", "react-router-serve", "build/server/index.js" ]

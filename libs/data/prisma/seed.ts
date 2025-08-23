@@ -26,29 +26,38 @@ export function createPassword(password: string = faker.internet.password()) {
 }
 
 export async function main() {
-  console.log('🌱 Seeding...');
-  console.time(`🌱 Database has been seeded`);
+  console.log('🌱  Seeding...');
+  console.time(`🌱  Database has been seeded`);
 
-  console.time(`👤 Created ${userData.length} users...`);
+  console.time(`👤  Created ${userData.length} users`);
   for (const u of userData) {
     await prisma.user.create({ data: u });
   }
-  console.timeEnd(`👤 Created ${userData.length} users...`);
+  console.timeEnd(`👤  Created ${userData.length} users`);
 
-  console.time(`🐨 Created admin user "jason"`);
-  await prisma.user.create({
-    data: {
-      email: 'jason@evolonix.com',
-      name: 'Jason',
-      password: { create: createPassword('password') },
-      roles: {
-        connect: [{ name: 'admin' }, { name: 'user' }, { name: 'developer' }],
-      },
-    },
+  // Check if user exists
+  console.log('👤  Checking if admin user "Jason" exists...');
+  const existingUser = await prisma.user.findUnique({
+    where: { email: 'jason@evolonix.com' },
   });
-  console.timeEnd(`🐨 Created admin user "jason"`);
+  if (existingUser) {
+    console.log(`✅  User "Jason" already exists`);
+  } else {
+    console.time(`👤  Created admin user "Jason"`);
+    await prisma.user.create({
+      data: {
+        email: 'jason@evolonix.com',
+        name: 'Jason',
+        password: { create: createPassword('Password01!') },
+        roles: {
+          connect: [{ name: 'admin' }, { name: 'user' }, { name: 'developer' }],
+        },
+      },
+    });
+    console.timeEnd(`👤  Created admin user "Jason"`);
+  }
 
-  console.timeEnd(`🌱 Database has been seeded`);
+  console.timeEnd(`🌱  Database has been seeded`);
 }
 
 main();

@@ -20,6 +20,7 @@
     "@conform-to/zod": "^1.8.2",
     "@epic-web/remember": "^1.1.0",
     "@faker-js/faker": "^9.9.0",
+    "@flydotio/litestream": "^1.0.1",
     "@headlessui/react": "^2.2.7",
     "@heroicons/react": "^2.2.0",
     "@oslojs/crypto": "^1.0.1",
@@ -62,6 +63,7 @@
     "@commitlint/config-nx-scopes": "^19.8.1",
     "@commitlint/cz-commitlint": "^19.8.1",
     "@eslint/js": "^9.8.0",
+    "@flydotio/dockerfile": "^0.7.10",
     "@graphql-codegen/cli": "^5.0.7",
     "@graphql-codegen/client-preset": "^4.8.3",
     "@nx/devkit": "21.3.10",
@@ -135,6 +137,9 @@
     }
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
+  },
+  "dockerfile": {
+    "litestream": true
   }
 }

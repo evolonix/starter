@@ -68,8 +68,9 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     headers,
     allowlistedOrigins: [
       getDomainUrl(request),
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      process.env.AWS_ENDPOINT_URL_S3!,
+      ...(process.env.AWS_ENDPOINT_URL_S3
+        ? [process.env.AWS_ENDPOINT_URL_S3]
+        : []),
     ].filter(Boolean),
     cacheFolder: await getCacheDir(),
     getImgSource: () => {

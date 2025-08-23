@@ -10,10 +10,10 @@ Create [apps/web/.env.example](../../apps/web/.env.example) with the following:
 VITE_GOOGLE_ANALYTICS_MEASUREMENT_ID='G-XXXXXXXXXX'
 ```
 
-If desired, copy `.env.example` to `.env.local` and replace `G-XXXXXXXXXX` with your Google Analytics Measurement ID.
+If desired, copy `.env.example` to `.env` and replace `G-XXXXXXXXXX` with your Google Analytics Measurement ID.
 
 ```bash
-cp apps/web/.env.example apps/web/.env.local
+cp apps/web/.env.example apps/web/.env
 ```
 
 Update [apps/web/app/root.tsx](../../apps/web/app/root.tsx) with the following:
