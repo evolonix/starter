@@ -15,17 +15,12 @@ permissions:
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these deployments to complete.
-concurrency:
-  group: 'staging'
-  cancel-in-progress: false
-
 jobs:
-  staging:
+  check-web:
+    name: Check Web
     runs-on: ubuntu-latest
     outputs:
-      affected_build_starter: ${{ steps.affected_build_starter.outputs.projects }}
+      affected-web: ${{ steps.affected-web.outputs.projects }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -44,7 +39,8 @@ jobs:
           node-version: 24
           cache: 'npm'
 
-      - run: npm ci --legacy-peer-deps --ignore-scripts
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps --ignore-scripts
       # - run: npx playwright install --with-deps
       - uses: nrwl/nx-set-shas@v4
 
@@ -52,10 +48,13 @@ jobs:
       # - run: npx nx-cloud record -- echo Hello World
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       # When you enable task distribution, run the e2e-ci task instead of e2e
-      - run: npx nx affected -t lint test # e2e
-      - run: npx nx affected -t build --exclude web
+      - name: Run affected lint and test
+        run: npx nx affected -t lint test # e2e
+      - name: Run affected build excluding web
+        run: npx nx affected -t build --exclude web
 
-      - id: affected_build_starter
+      - name: Check if web is affected
+        id: affected-web
         if: github.event_name != 'workflow_dispatch'
         run: |
           npx nx show projects --projects web --affected
@@ -65,17 +64,21 @@ jobs:
           fi
           echo "projects=$projects" >> $GITHUB_OUTPUT
 
-      - if: github.event_name == 'workflow_dispatch' || steps.affected_build_starter.outputs.projects != ''
-        run: npx nx build web
+      - name: Build web if affected
+        if: github.event_name == 'workflow_dispatch' || steps.affected-web.outputs.projects != ''
+        run: npx nx build web --mode staging
 
-  deploy-web-staging:
+  deploy-web:
+    name: Deploy Web
     environment:
       name: Staging
-      url: https://evolonix-starter-staging.fly.dev
+      url: ${{ steps.deploy_status.outputs.url }}
     runs-on: ubuntu-latest
-    concurrency: deploy-web-staging
-    needs: staging
-    if: github.event_name == 'workflow_dispatch' || needs.staging.outputs.affected_build_starter != ''
+    concurrency:
+      group: staging
+      cancel-in-progress: false
+    needs: check-web
+    if: github.event_name == 'workflow_dispatch' || needs.check-web.outputs.affected-web != ''
     steps:
       - uses: actions/checkout@v4
 
@@ -85,14 +88,64 @@ jobs:
           node-version: 24
           cache: 'npm'
 
-      - run: npm ci --legacy-peer-deps --ignore-scripts
-
-      - run: node customize-ci.js
+      # Customize for prettier deployment of starter template
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      - name: Customize template for CI
+        run: node customize-ci.js
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - run: |
-          flyctl secrets set VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}" --config apps/web/fly.staging.toml
+      # Check status of app and return output if exists or not
+      - name: Check if app exists on Fly.io
+        id: fly_status
+        run: |
+          if flyctl status --app "evolonix-starter-staging"; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
 
-      - run: |
-          flyctl deploy --config apps/web/fly.staging.toml
+      - name: Create Fly.io app if it does not exist
+        if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
+          flyctl apps create --org evolonix "evolonix-starter-staging" \
+            --name "evolonix-starter-staging" \
+            --yes
+
+      - name: Create Fly.io storage if app does not exist
+        if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
+          # Create storage with JSON output
+          output=$(flyctl storage create --name "evolonix-starter-staging-storage" --app "evolonix-starter-staging" --yes)
+          echo "$output"
+          # Extract only the KEY: VALUE lines
+          kv=$(echo "$output" | grep '^[A-Z0-9_]\+: ' | sed 's/: /=/')
+          echo "$kv"
+          # Convert to space-delimited single line
+          kv_line=$(echo "$kv" | tr '\n' ' ')
+          flyctl secrets set $kv_line --app "evolonix-starter-staging"
+
+      - name: Set Fly.io secrets if app does not exist
+        if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
+          flyctl secrets set SESSION_SECRET=$(openssl rand -hex 32) \
+            HONEYPOT_SECRET=$(openssl rand -hex 32) DATABASE_URL="file:/data/sqlite.db" \
+            VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}" \
+            --app "evolonix-starter-staging"
+
+      - name: Create Fly.io volume if app does not exist
+        if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
+          flyctl volumes create data --region iad --size 1 --app "evolonix-starter-staging" --yes
+
+      - name: Deploy to Fly.io
+        run: |
+          flyctl deploy --remote-only --config apps/web/fly.staging.toml --app "evolonix-starter-staging"
+
+      - name: Get deployment URL
+        id: deploy_status
+        run: |
+          flyctl status --app "evolonix-starter-staging" --json > status.json
+          hostname=$(jq -r '.Hostname' status.json)
+          echo "url=https://${hostname}" >> $GITHUB_OUTPUT

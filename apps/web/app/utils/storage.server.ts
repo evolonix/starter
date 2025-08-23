@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { createId } from '@paralleldrive/cuid2';
 import { LocalFileStorage } from '@remix-run/file-storage/local';
 import { type FileUpload } from '@remix-run/form-data-parser';
@@ -103,6 +102,14 @@ function getBaseSignedRequestInfo({
   contentType?: string;
   uploadDate?: string;
 }) {
+  if (!STORAGE_SECRET_KEY) {
+    throw new Error('Missing storage secret key');
+  }
+
+  if (!STORAGE_REGION) {
+    throw new Error('Missing storage region');
+  }
+
   const url = `${STORAGE_ENDPOINT}/${STORAGE_BUCKET}/${key}`;
   const endpoint = new URL(url);
 
@@ -143,9 +150,9 @@ function getBaseSignedRequestInfo({
 
   // Calculate signature
   const signingKey = getSignatureKey(
-    STORAGE_SECRET_KEY!,
+    STORAGE_SECRET_KEY,
     dateStamp,
-    STORAGE_REGION!,
+    STORAGE_REGION,
     's3',
   );
   const signature = createHmac('sha256', signingKey)

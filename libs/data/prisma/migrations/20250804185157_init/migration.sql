@@ -151,6 +151,8 @@ CREATE UNIQUE INDEX "_RoleToUser_AB_unique" ON "_RoleToUser"("A", "B");
 -- CreateIndex
 CREATE INDEX "_RoleToUser_B_index" ON "_RoleToUser"("B");
 
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
 INSERT INTO Permission VALUES('clnf2zvli0000pcou3zzzzome','create','user','own','',1696625465526,1696625465526);
 INSERT INTO Permission VALUES('clnf2zvll0001pcouly1310ku','create','user','any','',1696625465529,1696625465529);
 INSERT INTO Permission VALUES('clnf2zvll0002pcouka7348re','read','user','own','',1696625465530,1696625465530);
@@ -176,3 +178,11 @@ INSERT INTO _PermissionToRole VALUES('clnf2zvll0001pcouly1310ku','cme1ux2ua0000u
 INSERT INTO _PermissionToRole VALUES('clnf2zvlm0003pcouea4dee51','cme1ux2ua0000uzd8xko991n0');
 INSERT INTO _PermissionToRole VALUES('clnf2zvln0005pcoun78ps5ap','cme1ux2ua0000uzd8xko991n0');
 INSERT INTO _PermissionToRole VALUES('clnf2zvlo0007pcouw1yzoyam','cme1ux2ua0000uzd8xko991n0');
+
+-- Create initial admin, Jason
+INSERT INTO Password VALUES('$2b$10$ThzweYdidx47S1mQtMWj7u7Z0axYFX8Q9UqxzgDy7fmbUsoXoXf5a','cmepwmpk90000uze7xokhi7g2');
+INSERT INTO _RoleToUser VALUES('clnf2zvlw000gpcour6dyyuh6','cmepwmpk90000uze7xokhi7g2');
+INSERT INTO _RoleToUser VALUES('clnf2zvlx000hpcou5dfrbegs','cmepwmpk90000uze7xokhi7g2');
+INSERT INTO _RoleToUser VALUES('cme1ux2ua0000uzd8xko991n0','cmepwmpk90000uze7xokhi7g2');
+INSERT INTO User VALUES('cmepwmpk90000uze7xokhi7g2','jason@evolonix.com','Jason',1756053024489,1756053024489);
+COMMIT;

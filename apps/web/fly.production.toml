@@ -5,8 +5,11 @@ app = '~~_starter.org_name_~~-~~_starter.name_~~'
 primary_region = 'iad'
 
 [mounts]
-  source = "data"
-  destination = "/data"
+  source = 'data'
+  destination = '/data'
+  auto_extend_size_threshold = 80
+  auto_extend_size_increment = '1GB'
+  auto_extend_size_limit = '10GB'
 
 [build]
   dockerfile = './Dockerfile.production'

@@ -66,8 +66,8 @@ Copy the environment variables from the output of each command above and pass th
 Next, add secrets to the fly app by running the following commands:
 
 ```bash
-fly secrets set SESSION_SECRET=$(openssl rand -hex 32) ALLOW_INDEXING="false" HONEYPOT_SECRET=$(openssl rand -hex 32) --app ~~_starter.org_name_~~-~~_starter.name_~~
-fly secrets set SESSION_SECRET=$(openssl rand -hex 32) ALLOW_INDEXING="false" HONEYPOT_SECRET=$(openssl rand -hex 32) --app ~~_starter.org_name_~~-~~_starter.name_~~-staging
+fly secrets set SESSION_SECRET=$(openssl rand -hex 32) HONEYPOT_SECRET=$(openssl rand -hex 32) --app ~~_starter.org_name_~~-~~_starter.name_~~
+fly secrets set SESSION_SECRET=$(openssl rand -hex 32) HONEYPOT_SECRET=$(openssl rand -hex 32) --app ~~_starter.org_name_~~-~~_starter.name_~~-staging
 ```
 
 Now, create the database for each environment:
@@ -75,13 +75,6 @@ Now, create the database for each environment:
 ```bash
 fly volumes create data --region iad --size 1 --app ~~_starter.org_name_~~-~~_starter.name_~~ --yes
 fly volumes create data --region iad --size 1 --app ~~_starter.org_name_~~-~~_starter.name_~~-staging --yes
-```
-
-Consul is a fly-managed service that manages your primary instance for data replication. Attach it with the following commands:
-
-```bash
-fly consul attach --app ~~_starter.org_name_~~-~~_starter.name_~~
-fly consul attach --app ~~_starter.org_name_~~-~~_starter.name_~~-staging
 ```
 
 Connect to your databases to manage the data using the following commands for each environment, each in a separate terminal:
@@ -120,7 +113,7 @@ Create the following secrets for each environment:
 
 - `VITE_FLAGSMITH_ENVIRONMENT_ID`: The environment ID for the associated environment in Flagsmith.
 
-Configure your development environment by creating a `.env.local` file in the root of the "web" project with the following content:
+Configure your development environment by creating a `.env` file in the root of the "web" project with the following content:
 
 ```dotenv
 VITE_FLAGSMITH_ENVIRONMENT_ID=your_development_environment_id

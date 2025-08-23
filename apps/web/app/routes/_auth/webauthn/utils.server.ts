@@ -12,8 +12,9 @@ export const passkeyCookie = createCookie('webauthn-challenge', {
   httpOnly: true,
   maxAge: 60 * 60 * 2,
   secure: process.env.NODE_ENV === 'production',
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  secrets: [process.env.SESSION_SECRET!],
+  ...(process.env.SESSION_SECRET
+    ? { secrets: [process.env.SESSION_SECRET] }
+    : {}),
 });
 
 export const PasskeyCookieSchema = z.object({

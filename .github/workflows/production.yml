@@ -17,11 +17,14 @@ env:
 
 jobs:
   deploy-web:
+    name: Deploy Web
     environment:
       name: Production
-      url: https://evolonix-starter.fly.dev
+      url: ${{ steps.deploy_status.outputs.url }}
     runs-on: ubuntu-latest
-    concurrency: deploy-web
+    concurrency:
+      group: production
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
 
@@ -31,14 +34,64 @@ jobs:
           node-version: 24
           cache: 'npm'
 
-      - run: npm ci --legacy-peer-deps --ignore-scripts
-
-      - run: node customize-ci.js
+      # Customize for prettier deployment of starter template
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+      - name: Customize template for CI
+        run: node customize-ci.js
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - run: |
-          flyctl secrets set VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}" --config apps/web/fly.production.toml
+      # Check status of app and return output if exists or not
+      - name: Check if app exists on Fly.io
+        id: fly_status
+        run: |
+          if flyctl status --app "evolonix-starter"; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
 
-      - run: |
-          flyctl deploy --config apps/web/fly.production.toml --image-label evolonix-starter-${{ github.ref_name }}
+      - name: Create Fly.io app if it does not exist
+        if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
+          flyctl apps create --org evolonix "evolonix-starter" \
+            --name "evolonix-starter" \
+            --yes
+
+      - name: Create Fly.io storage if app does not exist
+        if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
+          # Create storage with JSON output
+          output=$(flyctl storage create --name "evolonix-starter-storage" --app "evolonix-starter" --yes)
+          echo "$output"
+          # Extract only the KEY: VALUE lines
+          kv=$(echo "$output" | grep '^[A-Z0-9_]\+: ' | sed 's/: /=/')
+          echo "$kv"
+          # Convert to space-delimited single line
+          kv_line=$(echo "$kv" | tr '\n' ' ')
+          flyctl secrets set $kv_line --app "evolonix-starter"
+
+      - name: Set Fly.io secrets if app does not exist
+        if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
+          flyctl secrets set SESSION_SECRET=$(openssl rand -hex 32) \
+            HONEYPOT_SECRET=$(openssl rand -hex 32) DATABASE_URL="file:/data/sqlite.db" \
+            VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}" \
+            --app "evolonix-starter"
+
+      - name: Create Fly.io volume if app does not exist
+        if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
+          flyctl volumes create data --region iad --size 1 --app "evolonix-starter" --yes
+
+      - name: Deploy to Fly.io
+        run: |
+          flyctl deploy --remote-only --config apps/web/fly.production.toml --app "evolonix-starter"
+
+      - name: Get deployment URL
+        id: deploy_status
+        run: |
+          flyctl status --app "evolonix-starter" --json > status.json
+          hostname=$(jq -r '.Hostname' status.json)
+          echo "url=https://${hostname}" >> $GITHUB_OUTPUT

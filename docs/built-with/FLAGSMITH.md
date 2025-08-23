@@ -29,7 +29,7 @@ Update [apps/web/.env.example](../../apps/web/.env.example) to include the Flags
 VITE_FLAGSMITH_ENVIRONMENT_ID='XXXXXXXXXXXXXXXXXXXXXX'
 ```
 
-If present, update [apps/web/.env.local](../../apps/web/.env.local) to include the Flagsmith environment ID:
+If present, update [apps/web/.env](../../apps/web/.env) to include the Flagsmith environment ID:
 
 ```dotenv
 # Flagsmith environment ID
