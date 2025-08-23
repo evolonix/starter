@@ -85,6 +85,8 @@ jobs:
 
       - run: npm ci --legacy-peer-deps --ignore-scripts
 
+      - run: node customize-ci.js
+
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       # Check status of app and return output if exists or not
@@ -110,8 +112,6 @@ jobs:
             --app "evolonix-starter-pr-${{ github.event.number }}"
           flyctl volumes create data --region iad --size 1 --app "evolonix-starter-pr-${{ github.event.number }}" --yes
           flyctl consul attach --app "evolonix-starter-pr-${{ github.event.number }}"
-
-      - run: node customize-ci.js
 
       - run: |
           flyctl deploy --config apps/web/fly.preview.toml --app "evolonix-starter-pr-${{ github.event.number }}"

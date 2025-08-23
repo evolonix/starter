@@ -33,12 +33,12 @@ jobs:
 
       - run: npm ci --legacy-peer-deps --ignore-scripts
 
+      - run: node customize-ci.js
+
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - run: |
-          flyctl secrets set VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}"
-
-      - run: node customize-ci.js
+          flyctl secrets set VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}" --config apps/web/fly.production.toml
 
       - run: |
           flyctl deploy --config apps/web/fly.production.toml --image-label evolonix-starter-${{ github.ref_name }}
