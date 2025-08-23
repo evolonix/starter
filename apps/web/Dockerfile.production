@@ -31,8 +31,7 @@ COPY --link . .
 RUN npm install --ignore-scripts
 
 # Set environment
-ARG VITE_FLAGSMITH_ENVIRONMENT_ID
-ENV VITE_FLAGSMITH_ENVIRONMENT_ID=$VITE_FLAGSMITH_ENVIRONMENT_ID
+ENV DATABASE_URL="file:/data/sqlite.db"
 ENV NODE_ENV="production"
 # Not sure why, but this is needed for Nx graph to work
 ENV NX_DAEMON=false
@@ -51,6 +50,10 @@ RUN npm install --omit=dev
 
 COPY --from=build /app/node_modules/.prisma /app/node_modules/.prisma
 COPY --from=build /app/libs/data/prisma /app/prisma
+
+ENV DATABASE_URL="file:/data/sqlite.db"
+
+RUN npx prisma generate
 
 # Prepare for LiteFS
 # COPY --from=flyio/litefs:0.5 /usr/local/bin/litefs /usr/local/bin/litefs

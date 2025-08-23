@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "prestart:preview": "prisma migrate reset --force",
-    "start:preview": "npx react-router-serve build/server/index.js",
+    "start:preview": "react-router-serve build/server/index.js",
     "prestart": "prisma migrate deploy && prisma generate",
-    "start": "npx react-router-serve build/server/index.js"
+    "start": "react-router-serve build/server/index.js"
   },
   "sideEffects": false,
   "dependencies": {
@@ -47,7 +47,8 @@
     "mustache": "^4.2.0",
     "prisma": "^6.13.0",
     "tsx": "^4.20.3",
-    "@faker-js/faker": "^9.9.0"
+    "@faker-js/faker": "^9.9.0",
+    "openimg": "^1.1.0"
   },
   "devDependencies": {
     "@react-router/dev": "^7.2.0",

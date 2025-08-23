@@ -106,11 +106,29 @@ jobs:
 
       - if: ${{ steps.fly_status.outputs.exists == 'false' }}
         run: |
+          # Create storage with JSON output
+          output=$(flyctl storage create --name "evolonix-starter-pr-${{ github.event.number }}-storage" --app "evolonix-starter-pr-${{ github.event.number }}" --yes)
+          echo "$output"
+          # Extract only the KEY: VALUE lines
+          kv=$(echo "$output" | grep '^[A-Z0-9_]\+: ' | sed 's/: /=/')
+          echo "$kv"
+          # Convert to space-delimited single line
+          kv_line=$(echo "$kv" | tr '\n' ' ')
+          flyctl secrets set $kv_line --app "evolonix-starter-pr-${{ github.event.number }}"
+
+      - if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
           flyctl secrets set SESSION_SECRET=$(openssl rand -hex 32) ALLOW_INDEXING="false" \
             HONEYPOT_SECRET=$(openssl rand -hex 32) DATABASE_URL="file:/data/sqlite.db" \
             VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}" \
             --app "evolonix-starter-pr-${{ github.event.number }}"
+
+      - if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
           flyctl volumes create data --region iad --size 1 --app "evolonix-starter-pr-${{ github.event.number }}" --yes
+
+      - if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
           flyctl consul attach --app "evolonix-starter-pr-${{ github.event.number }}"
 
       - run: |
