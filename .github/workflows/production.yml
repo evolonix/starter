@@ -12,6 +12,9 @@ permissions:
   actions: read
   contents: read
 
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
 jobs:
   deploy-web:
     environment:
@@ -39,5 +42,3 @@ jobs:
 
       - run: |
           flyctl deploy --config apps/web/fly.production.toml --image-label evolonix-starter-${{ github.ref_name }}
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

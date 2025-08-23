@@ -12,6 +12,9 @@ permissions:
   actions: read
   contents: read
 
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these deployments to complete.
 concurrency:
@@ -93,5 +96,3 @@ jobs:
 
       - run: |
           flyctl deploy --config apps/web/fly.staging.toml
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
