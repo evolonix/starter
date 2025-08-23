@@ -54,6 +54,15 @@ fly apps create ~~_starter.org_name_~~-~~_starter.name_~~
 fly apps create ~~_starter.org_name_~~-~~_starter.name_~~-staging
 ```
 
+Setup Tigris object storage for images:
+
+```bash
+fly storage create --app ~~_starter.org_name_~~-~~_starter.name_~~
+fly storage create --app ~~_starter.org_name_~~-~~_starter.name_~~-staging
+```
+
+Copy the environment variables from the output of each command above and pass them to the `fly secrets set`, space delimited, along with the others below.
+
 Next, add secrets to the fly app by running the following commands:
 
 ```bash
