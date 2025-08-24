@@ -73,8 +73,8 @@ fly secrets set SESSION_SECRET=$(openssl rand -hex 32) HONEYPOT_SECRET=$(openssl
 Now, create the database for each environment:
 
 ```bash
-fly volumes create data --region iad --size 1 --app ~~_starter.org_name_~~-~~_starter.name_~~ --yes
-fly volumes create data --region iad --size 1 --app ~~_starter.org_name_~~-~~_starter.name_~~-staging --yes
+fly volumes create data --config apps/web/fly.production.toml --app ~~_starter.org_name_~~-~~_starter.name_~~ --yes
+fly volumes create data --config apps/web/fly.staging.toml --app ~~_starter.org_name_~~-~~_starter.name_~~-staging --yes
 ```
 
 Connect to your databases to manage the data using the following commands for each environment, each in a separate terminal:

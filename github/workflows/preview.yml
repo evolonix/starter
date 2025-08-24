@@ -127,7 +127,7 @@ jobs:
       - name: Create Fly.io volume if app does not exist
         if: ${{ steps.fly_status.outputs.exists == 'false' }}
         run: |
-          flyctl volumes create data --region iad --size 1 --app "~~_starter.org_name_~~-~~_starter.name_~~-pr-${{ github.event.number }}" --yes
+          flyctl volumes create data --config apps/web/fly.preview.toml --app "~~_starter.org_name_~~-~~_starter.name_~~-pr-${{ github.event.number }}" --yes
 
       - name: Deploy to Fly.io
         run: |

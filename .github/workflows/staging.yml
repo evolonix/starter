@@ -132,10 +132,10 @@ jobs:
             VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}" \
             --app "evolonix-starter-staging"
 
-      - name: Create Fly.io volume if app does not exist
-        if: ${{ steps.fly_status.outputs.exists == 'false' }}
-        run: |
-          flyctl volumes create data --region iad --size 1 --app "evolonix-starter-staging" --yes
+      # - name: Create Fly.io volume if app does not exist
+      #   if: ${{ steps.fly_status.outputs.exists == 'false' }}
+      #   run: |
+      #     flyctl volumes create data --config apps/web/fly.staging.toml --app "evolonix-starter-staging" --yes
 
       - name: Deploy to Fly.io
         run: |
