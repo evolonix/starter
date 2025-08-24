@@ -9,6 +9,25 @@
  * Usage: `node customize.js`
  */
 
+function packageExists(packageName) {
+  try {
+    require.resolve(packageName);
+    return true; // Package found
+  } catch (e) {
+    if (e.code === 'MODULE_NOT_FOUND') {
+      return false; // Package not found
+    }
+    throw e; // Re-throw other errors
+  }
+}
+
+if (!packageExists('mustache')) {
+  console.error(
+    '❌ Mustache package is not installed. Please run `npm install` and try again.',
+  );
+  process.exit(1);
+}
+
 const fs = require('fs');
 const path = require('path');
 const mustache = require('mustache');
@@ -25,6 +44,7 @@ const IGNORE_PATTERNS = [
   '.png',
   '.jpg',
   '.jpeg',
+  '.ico',
 ];
 
 const CUSTOMIZE_FILE = 'customize.json';

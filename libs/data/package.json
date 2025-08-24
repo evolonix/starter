@@ -15,22 +15,22 @@
           "cwd": "libs/data"
         }
       },
-      "setup": {
-        "executor": "nx:run-commands",
+      "generate": {
+        "command": "prisma generate",
         "options": {
-          "commands": [
-            {
-              "command": "prisma migrate deploy"
-            },
-            {
-              "command": "prisma generate"
-            },
-            {
-              "command": "prisma db seed"
-            }
-          ],
-          "cwd": "libs/data",
-          "parallel": false
+          "cwd": "libs/data"
+        }
+      },
+      "migrate-dev": {
+        "command": "prisma migrate dev",
+        "options": {
+          "cwd": "libs/data"
+        }
+      },
+      "reset": {
+        "command": "prisma migrate reset",
+        "options": {
+          "cwd": "libs/data"
         }
       },
       "deploy": {
@@ -46,24 +46,6 @@
           ],
           "cwd": "libs/data",
           "parallel": false
-        }
-      },
-      "generate-types": {
-        "command": "prisma generate",
-        "options": {
-          "cwd": "libs/data"
-        }
-      },
-      "migrate": {
-        "command": "prisma migrate dev",
-        "options": {
-          "cwd": "libs/data"
-        }
-      },
-      "reset": {
-        "command": "prisma migrate reset --skip-generate",
-        "options": {
-          "cwd": "libs/data"
         }
       }
     }

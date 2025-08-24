@@ -31,5 +31,4 @@ RUN bash /app/scripts/setup.sh
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 4200
-
 CMD [ "npx", "nx", "dev", "web", "--host" ]

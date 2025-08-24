@@ -13,7 +13,7 @@ fi
 # Check if libs/data/prisma/dev.db exists
 if [ ! -f libs/data/prisma/dev.db ]; then
   echo "Database setup has not been run. Running it now..."
-  if ! nx run data:setup; then
+  if ! npx nx run data:reset --force; then
     echo "❌ Error occurred during setup."
     exit 1
   fi

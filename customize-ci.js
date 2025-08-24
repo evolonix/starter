@@ -24,6 +24,7 @@ const IGNORE_PATTERNS = [
   '.png',
   '.jpg',
   '.jpeg',
+  '.ico',
   '.github',
 ];
 
