@@ -58,7 +58,7 @@
     "targets": {
       "build": {
         "dependsOn": [
-          "data:generate-types"
+          "data:generate"
         ]
       },
       "docker-build": {
