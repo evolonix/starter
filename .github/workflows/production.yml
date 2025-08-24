@@ -78,11 +78,6 @@ jobs:
             VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}" \
             --app "evolonix-starter"
 
-      - name: Create Fly.io volume if app does not exist
-        if: ${{ steps.fly_status.outputs.exists == 'false' }}
-        run: |
-          flyctl volumes create data --config apps/web/fly.production.toml --app "evolonix-starter" --yes
-
       - name: Deploy to Fly.io
         run: |
           flyctl deploy --remote-only --config apps/web/fly.production.toml --app "evolonix-starter"

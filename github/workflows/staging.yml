@@ -122,11 +122,6 @@ jobs:
             VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}" \
             --app "~~_starter.org_name_~~-~~_starter.name_~~-staging"
 
-      - name: Create Fly.io volume if app does not exist
-        if: ${{ steps.fly_status.outputs.exists == 'false' }}
-        run: |
-          flyctl volumes create data --config apps/web/fly.staging.toml --app "~~_starter.org_name_~~-~~_starter.name_~~-staging" --yes
-
       - name: Deploy to Fly.io
         run: |
           flyctl deploy --remote-only --config apps/web/fly.staging.toml --app "~~_starter.org_name_~~-~~_starter.name_~~-staging"
