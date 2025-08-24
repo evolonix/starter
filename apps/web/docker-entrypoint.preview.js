@@ -23,7 +23,7 @@ const env = { ...process.env };
     }
 
     // prepare database
-    await exec('npx prisma migrate reset --force');
+    await exec('npx prisma migrate reset --skip-generate --force');
   }
 
   // launch application

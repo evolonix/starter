@@ -3,12 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "scripts": {
-    "prestart:preview": "prisma migrate reset --force",
-    "start:preview": "react-router-serve build/server/index.js",
-    "prestart": "prisma migrate deploy && prisma generate",
-    "start": "react-router-serve build/server/index.js"
-  },
+  "scripts": {},
   "sideEffects": false,
   "dependencies": {
     "@apollo/client": "^3.13.9",

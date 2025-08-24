@@ -61,7 +61,7 @@
         }
       },
       "reset": {
-        "command": "prisma migrate reset",
+        "command": "prisma migrate reset --skip-generate",
         "options": {
           "cwd": "libs/data"
         }

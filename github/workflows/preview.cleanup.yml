@@ -15,6 +15,7 @@ env:
 
 jobs:
   cleanup-web-preview:
+    name: Cleanup Web Preview
     if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     # Only run one deployment at a time per PR.
@@ -27,7 +28,8 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       # Check status of app and return output if exists or not
-      - id: fly_status
+      - name: Check if app exists on Fly.io
+        id: fly_status
         run: |
           if flyctl status --app "~~_starter.org_name_~~-~~_starter.name_~~-pr-${{ github.event.number }}"; then
             echo "exists=true" >> $GITHUB_OUTPUT
@@ -35,8 +37,10 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - if: ${{ steps.fly_status.outputs.exists == 'true' }}
+      - name: Cleanup Fly.io resources
+        if: ${{ steps.fly_status.outputs.exists == 'true' }}
         run: |
+          flyctl storage destroy --app "~~_starter.org_name_~~-~~_starter.name_~~-pr-${{ github.event.number }}" --yes
           flyctl apps destroy "~~_starter.org_name_~~-~~_starter.name_~~-pr-${{ github.event.number }}" --yes
 
       # If using the name `pr-${{ github.event.number }}` for the environment, you can use this action to delete the environment.

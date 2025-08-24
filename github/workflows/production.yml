@@ -17,18 +17,69 @@ env:
 
 jobs:
   deploy-web:
+    name: Deploy Web
     environment:
       name: Production
-      url: https://~~_starter.org_name_~~-~~_starter.name_~~.fly.dev
+      url: ${{ steps.deploy_status.outputs.url }}
     runs-on: ubuntu-latest
-    concurrency: deploy-web
+    concurrency:
+      group: production
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - run: |
-          flyctl secrets set VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}" --config apps/web/fly.staging.toml
+      # Check status of app and return output if exists or not
+      - name: Check if app exists on Fly.io
+        id: fly_status
+        run: |
+          if flyctl status --app "~~_starter.org_name_~~-~~_starter.name_~~"; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
 
-      - run: |
-          flyctl deploy --config apps/web/fly.production.toml --image-label ~~_starter.org_name_~~-~~_starter.name_~~-${{ github.ref_name }}
+      - name: Create Fly.io app if it does not exist
+        if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
+          flyctl apps create --org ~~_starter.org_name_~~ "~~_starter.org_name_~~-~~_starter.name_~~" \
+            --name "~~_starter.org_name_~~-~~_starter.name_~~" \
+            --yes
+
+      - name: Create Fly.io storage if app does not exist
+        if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
+          # Create storage with JSON output
+          output=$(flyctl storage create --name "~~_starter.org_name_~~-~~_starter.name_~~-storage" --app "~~_starter.org_name_~~-~~_starter.name_~~" --yes)
+          echo "$output"
+          # Extract only the KEY: VALUE lines
+          kv=$(echo "$output" | grep '^[A-Z0-9_]\+: ' | sed 's/: /=/')
+          echo "$kv"
+          # Convert to space-delimited single line
+          kv_line=$(echo "$kv" | tr '\n' ' ')
+          flyctl secrets set $kv_line --app "~~_starter.org_name_~~-~~_starter.name_~~"
+
+      - name: Set Fly.io secrets if app does not exist
+        if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
+          flyctl secrets set SESSION_SECRET=$(openssl rand -hex 32) \
+            HONEYPOT_SECRET=$(openssl rand -hex 32) DATABASE_URL="file:/data/sqlite.db" \
+            VITE_FLAGSMITH_ENVIRONMENT_ID="${{ secrets.VITE_FLAGSMITH_ENVIRONMENT_ID }}" \
+            --app "~~_starter.org_name_~~-~~_starter.name_~~"
+
+      - name: Create Fly.io volume if app does not exist
+        if: ${{ steps.fly_status.outputs.exists == 'false' }}
+        run: |
+          flyctl volumes create data --region iad --size 1 --app "~~_starter.org_name_~~-~~_starter.name_~~" --yes
+
+      - name: Deploy to Fly.io
+        run: |
+          flyctl deploy --remote-only --config apps/web/fly.production.toml --app "~~_starter.org_name_~~-~~_starter.name_~~"
+
+      - name: Get deployment URL
+        id: deploy_status
+        run: |
+          flyctl status --app "~~_starter.org_name_~~-~~_starter.name_~~" --json > status.json
+          hostname=$(jq -r '.Hostname' status.json)
+          echo "url=https://${hostname}" >> $GITHUB_OUTPUT

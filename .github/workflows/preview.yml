@@ -84,13 +84,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Cache node_modules
+      # Customize for prettier deployment of starter template
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: 'npm'
-
-      # Customize for prettier deployment of starter template
       - name: Install dependencies
         run: npm ci --ignore-scripts
       - name: Customize template for CI
