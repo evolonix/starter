@@ -15,7 +15,7 @@ LABEL fly_launch_runtime="Node.js/Prisma"
 WORKDIR /app
 
 # Set environment
-ENV NODE_ENV="staging"
+ENV NODE_ENV="production"
 
 
 # Throw-away build stage to reduce size of final image
@@ -37,7 +37,7 @@ ENV NX_DAEMON=false
 
 # Build the application
 # Prisma Client is generated as a dependent step to build
-RUN npx nx build web --mode staging
+RUN npx nx build web --mode production
 
 
 # Final stage for app image
