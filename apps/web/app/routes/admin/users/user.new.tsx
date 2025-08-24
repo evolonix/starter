@@ -23,6 +23,7 @@ import {
   data,
   useFetcher,
   useNavigate,
+  useSearchParams,
 } from 'react-router';
 import z from 'zod';
 import { prisma } from '../../../utils/db.server';
@@ -92,6 +93,8 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export const UserNew = () => {
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get('redirectTo');
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const fetcher = useFetcher<typeof action>();
@@ -127,7 +130,11 @@ export const UserNew = () => {
         preventCloseOnOutsideClick
         open={open}
         close={() => {
-          navigate(user?.id ? `/admin/users/${user?.id}` : '/admin/users');
+          navigate(
+            user?.id
+              ? `/admin/users/${user.id}`
+              : (redirectTo ?? '/admin/users'),
+          );
         }}
       >
         <fetcher.Form

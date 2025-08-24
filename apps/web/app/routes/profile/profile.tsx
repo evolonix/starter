@@ -29,7 +29,7 @@ export const Profile = () => {
               <div className="px-2.5 pt-2.5 sm:max-w-xs lg:max-w-none">
                 <Image
                   src={`/users/${user.id}/avatar?objectKey=${user.image?.objectKey}`}
-                  fallbackElement={<UserIcon />}
+                  fallbackElement={<UserIcon className="size-64" />}
                   alt={user.image?.altText ?? user.name}
                   sizes="(min-width: 1024px) 32rem, (min-width: 640px) 20rem, 40rem"
                   className="aspect-square rotate-3 rounded-2xl object-cover"

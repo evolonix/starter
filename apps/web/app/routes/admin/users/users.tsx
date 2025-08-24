@@ -15,6 +15,7 @@ import {
   Outlet,
   redirect,
   useLoaderData,
+  useLocation,
   useParams,
 } from 'react-router';
 import z from 'zod';
@@ -27,6 +28,7 @@ export async function loader() {
     include: {
       image: true,
     },
+    orderBy: { name: 'asc' },
   });
 
   return data({
@@ -98,6 +100,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export const AdminUsers = () => {
   const { id } = useParams();
+  const { pathname } = useLocation();
   const { users: list } = useLoaderData<typeof loader>();
   const [query, setQuery] = useState('');
 
@@ -108,7 +111,7 @@ export const AdminUsers = () => {
   return (
     <ManageList
       label="Users"
-      newUrl="/admin/users/new"
+      newUrl={`/admin/users/new?redirectTo=${encodeURIComponent(pathname)}`}
       list={<UserList list={list} query={query} onSearch={search} />}
       details={
         <>
