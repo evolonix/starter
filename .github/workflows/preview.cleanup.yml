@@ -40,7 +40,7 @@ jobs:
       - name: Cleanup Fly.io resources
         if: ${{ steps.fly_status.outputs.exists == 'true' }}
         run: |
-          flyctl storage destroy --app "evolonix-starter-pr-${{ github.event.number }}" --yes
+          flyctl storage destroy "evolonix-starter-pr-${{ github.event.number }}-storage" --yes
           flyctl apps destroy "evolonix-starter-pr-${{ github.event.number }}" --yes
 
       # If using the name `pr-${{ github.event.number }}` for the environment, you can use this action to delete the environment.

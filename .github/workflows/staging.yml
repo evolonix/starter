@@ -115,7 +115,7 @@ jobs:
         if: ${{ steps.fly_status.outputs.exists == 'false' }}
         run: |
           # Create storage with JSON output
-          output=$(flyctl storage create --name "evolonix-starter-staging-storage" --app "evolonix-starter-staging" --yes)
+          output=$(flyctl storage create --name "evolonix-starter-staging-storage-1" --app "evolonix-starter-staging" --yes)
           echo "$output"
           # Extract only the KEY: VALUE lines
           kv=$(echo "$output" | grep '^[A-Z0-9_]\+: ' | sed 's/: /=/')
