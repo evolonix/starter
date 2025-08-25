@@ -27,6 +27,7 @@ import {
 import z from 'zod';
 import { getUserId } from '../../utils/auth.server';
 import { prisma } from '../../utils/db.server';
+import { getAvatarUrl } from '../../utils/misc';
 import {
   removeProfileImage,
   uploadProfileImage,
@@ -156,7 +157,6 @@ export const ProfileEdit = () => {
         <Form
           method="POST"
           encType="multipart/form-data"
-          className="flex flex-col gap-8"
           {...getFormProps(form)}
         >
           <DrawerHeader>
@@ -175,7 +175,7 @@ export const ProfileEdit = () => {
                 inputProps={getInputProps(fields.file, {
                   type: 'file',
                 })}
-                src={`/users/${user.id}/avatar?objectKey=${user.image?.objectKey}`}
+                src={getAvatarUrl(user)}
                 fallbackElement={<UserIcon />}
                 onRemove={() => {
                   setImageObjectKey(undefined);

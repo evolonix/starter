@@ -4,21 +4,25 @@ import {
   Avatar,
   Dropdown,
   DropdownButton,
-  Navbar,
   NavbarItem,
   NavbarSection,
   NavbarSpacer,
-} from './catalyst';
-import { ProfileDropdownMenu } from './profile-dropdown-menu';
+  Navbar as UiNavbar,
+} from '@~~_starter.org_name_~~/ui';
 
-interface LayoutNavbarProps {
+interface NavbarProps {
   user?: { name: string; email: string } | null;
   avatarUrl?: string;
+  profileDropdownMenu?: React.ReactNode;
 }
 
-export const LayoutNavbar = ({ user, avatarUrl }: LayoutNavbarProps) => {
+export const Navbar = ({
+  user,
+  avatarUrl,
+  profileDropdownMenu,
+}: NavbarProps) => {
   return (
-    <Navbar>
+    <UiNavbar>
       <NavbarSpacer />
       <NavbarSection>
         <NavbarItem href="/search" aria-label="Search">
@@ -36,9 +40,9 @@ export const LayoutNavbar = ({ user, avatarUrl }: LayoutNavbarProps) => {
               alt={user?.name}
             />
           </DropdownButton>
-          <ProfileDropdownMenu anchor="bottom end" />
+          {profileDropdownMenu}
         </Dropdown>
       </NavbarSection>
-    </Navbar>
+    </UiNavbar>
   );
 };

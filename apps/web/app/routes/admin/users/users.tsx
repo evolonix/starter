@@ -8,14 +8,14 @@ import {
   ManageList,
 } from '@~~_starter.org_name_~~/manage-list-feature';
 import { Text } from '@~~_starter.org_name_~~/ui';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   ActionFunctionArgs,
   data,
+  LoaderFunctionArgs,
   Outlet,
   redirect,
   useLoaderData,
-  useLocation,
   useParams,
 } from 'react-router';
 import z from 'zod';
@@ -23,10 +23,15 @@ import { prisma } from '../../../utils/db.server';
 import { UserSchema } from '../../../utils/user';
 import { UserList } from './user.list';
 
-export async function loader() {
+export async function loader({ request }: LoaderFunctionArgs) {
   const users = await prisma.user.findMany({
     include: {
       image: true,
+      roles: {
+        include: {
+          permissions: true,
+        },
+      },
     },
     orderBy: { name: 'asc' },
   });
@@ -85,24 +90,17 @@ export async function action({ request }: ActionFunctionArgs) {
     id = created.id;
   }
 
-  // if (id) {
-  //   await prisma.user.delete({
-  //     where: { id },
-  //   });
-  // }
-
-  // return {
-  //   result: submission.reply(),
-  // };
-
   return redirect(`/admin/users/${id}`);
 }
 
 export const AdminUsers = () => {
   const { id } = useParams();
-  const { pathname } = useLocation();
   const { users: list } = useLoaderData<typeof loader>();
   const [query, setQuery] = useState('');
+  const newUrl = useMemo(
+    () => (id ? `/admin/users/${id}/new` : '/admin/users/new'),
+    [id],
+  );
 
   const search = (query?: string) => {
     setQuery(query ?? '');
@@ -111,8 +109,8 @@ export const AdminUsers = () => {
   return (
     <ManageList
       label="Users"
-      newUrl={`/admin/users/new?redirectTo=${encodeURIComponent(pathname)}`}
-      list={<UserList list={list} query={query} onSearch={search} />}
+      newUrl={newUrl}
+      list={<UserList users={list} query={query} onSearch={search} />}
       details={
         <>
           {!id || id === 'new' ? (

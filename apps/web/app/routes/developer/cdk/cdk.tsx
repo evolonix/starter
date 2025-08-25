@@ -5,14 +5,14 @@ import {
   PageHeader,
 } from '@~~_starter.org_name_~~/ui';
 
-export const CdkDashboard = () => {
+export const Cdk = () => {
   return (
     <>
       <PageHeader label="CDK" />
       <GridLayout>
         <GridLayoutItem>
           <Link
-            href="/cdk/grid-layout"
+            href="/developer/cdk/grid-layout"
             className="flex items-center gap-3 text-zinc-950 dark:text-white forced-colors:text-[CanvasText]"
           >
             Grid layout
@@ -23,4 +23,4 @@ export const CdkDashboard = () => {
   );
 };
 
-export default CdkDashboard;
+export default Cdk;

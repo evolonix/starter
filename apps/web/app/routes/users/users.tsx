@@ -9,7 +9,15 @@ import { prisma } from '../../utils/db.server';
 
 export async function loader() {
   const usersWithImages = await prisma.user.findMany({
-    include: { image: true },
+    include: {
+      image: true,
+      roles: {
+        include: {
+          permissions: true,
+        },
+      },
+    },
+    orderBy: { name: 'asc' },
   });
 
   return data({
@@ -17,7 +25,7 @@ export async function loader() {
   });
 }
 
-export const UsersDashboard = () => {
+export const Users = () => {
   const { usersWithImages } = useLoaderData<typeof loader>();
 
   return (
@@ -34,7 +42,7 @@ export const UsersDashboard = () => {
       </GridLayoutItem> */}
         {usersWithImages.length ? (
           usersWithImages.map((user) => (
-            <GridLayoutItem key={user.id} xl={6}>
+            <GridLayoutItem key={user.id} md={6} xl={4}>
               <UserCard user={user} href={`/users/${user.id}`} />
             </GridLayoutItem>
           ))
@@ -46,4 +54,4 @@ export const UsersDashboard = () => {
   );
 };
 
-export default UsersDashboard;
+export default Users;

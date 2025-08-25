@@ -3,9 +3,10 @@
 import * as Headless from '@headlessui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import clsx from 'clsx';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Outlet } from 'react-router';
 
+import { twMerge } from 'tailwind-merge';
 import { Button } from './button';
 import { NavbarItem } from './navbar';
 
@@ -28,10 +29,15 @@ function CloseMenuIcon() {
 }
 
 function MobileSidebar({
+  className,
   open,
   close,
   children,
-}: React.PropsWithChildren<{ open: boolean; close: () => void }>) {
+}: React.PropsWithChildren<{
+  className?: string;
+  open: boolean;
+  close: () => void;
+}>) {
   return (
     <Headless.Dialog open={open} onClose={close} className="lg:hidden">
       <Headless.DialogBackdrop
@@ -40,7 +46,10 @@ function MobileSidebar({
       />
       <Headless.DialogPanel
         transition
-        className="fixed inset-y-0 w-full max-w-80 p-2 transition duration-300 ease-in-out data-closed:-translate-x-full"
+        className={twMerge(
+          'fixed inset-y-0 w-full max-w-80 p-2 transition duration-300 ease-in-out data-closed:-translate-x-full',
+          className,
+        )}
       >
         <div className="flex h-full flex-col rounded-lg bg-white shadow-xs ring-1 ring-zinc-950/5 dark:bg-zinc-900 dark:ring-white/10">
           <div className="-mb-3 px-4 pt-3">
@@ -56,10 +65,13 @@ function MobileSidebar({
 }
 
 export function SidebarLayout({
+  banner,
   navbar,
   sidebar,
   children = <Outlet />,
 }: React.PropsWithChildren<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  banner?: React.ReactElement<any>;
   navbar: React.ReactNode;
   sidebar: React.ReactNode;
 }>) {
@@ -67,11 +79,13 @@ export function SidebarLayout({
   const [showToggleButton, setShowToggleButton] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
   const mainContentRef = React.useRef<HTMLDivElement>(null);
+  const bannerRef = React.useRef<HTMLElement>(null);
+  const [bannerHeight, setBannerHeight] = useState<number>(0);
 
-  const handleToggleSidebar = () => {
-    setIsExpanded((prev) => !prev);
-    localStorage.setItem(LOCAL_STORAGE_KEY, String(!isExpanded));
-  };
+  const bannerWithRef = useMemo(
+    () => (banner ? React.cloneElement(banner, { ref: bannerRef }) : undefined),
+    [banner],
+  );
 
   // Set isExpanded prop for sidebar
   sidebar = useMemo(
@@ -82,6 +96,15 @@ export function SidebarLayout({
       ),
     [sidebar, isExpanded],
   );
+
+  const handleToggleSidebar = () => {
+    setIsExpanded((prev) => !prev);
+    localStorage.setItem(LOCAL_STORAGE_KEY, String(!isExpanded));
+  };
+
+  useLayoutEffect(() => {
+    setBannerHeight(bannerRef.current?.getBoundingClientRect().height ?? 0);
+  }, [bannerWithRef]);
 
   const [isClient, setIsClient] = useState(false);
 
@@ -110,11 +133,18 @@ export function SidebarLayout({
         Skip to main content
       </a>
 
-      <div className="relative isolate flex min-h-svh w-full bg-white max-lg:flex-col lg:bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950">
+      <div
+        className="relative isolate flex min-h-svh w-full bg-white max-lg:flex-col lg:bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950"
+        style={
+          { '--banner-height': `${bannerHeight}px` } as React.CSSProperties
+        }
+      >
+        {bannerWithRef}
+
         {/* Sidebar on desktop */}
         <div
           className={clsx(
-            'fixed inset-y-0 left-0 transition-[width] duration-300 ease-in-out max-lg:hidden',
+            'fixed inset-y-0 top-[var(--banner-height)] left-0 transition-[width] duration-300 ease-in-out max-lg:hidden',
             isExpanded ? 'w-64' : 'w-[68px]',
           )}
           onMouseEnter={() => setShowToggleButton(true)}
@@ -141,12 +171,16 @@ export function SidebarLayout({
         </div>
 
         {/* Sidebar on mobile */}
-        <MobileSidebar open={showSidebar} close={() => setShowSidebar(false)}>
+        <MobileSidebar
+          className={'top-[var(--banner-height)]'}
+          open={showSidebar}
+          close={() => setShowSidebar(false)}
+        >
           {sidebar}
         </MobileSidebar>
 
         {/* Navbar on mobile */}
-        <header className="flex items-center px-4 lg:hidden">
+        <header className="flex items-center px-4 pt-[var(--banner-height)] lg:hidden">
           <div className="py-2.5">
             <NavbarItem
               onClick={() => setShowSidebar(true)}
@@ -161,7 +195,7 @@ export function SidebarLayout({
         {/* Content */}
         <main
           className={clsx(
-            'flex flex-1 flex-col pb-2 lg:min-w-0 lg:pt-2 lg:pr-2 lg:transition-[padding] lg:duration-300 lg:ease-in-out',
+            'flex flex-1 flex-col pb-2 lg:min-w-0 lg:pt-[calc(var(--banner-height)+--spacing(2))] lg:pr-2 lg:transition-[padding] lg:duration-300 lg:ease-in-out',
             isExpanded ? 'lg:pl-64' : 'lg:pl-[68px]',
           )}
         >

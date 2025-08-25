@@ -28,6 +28,7 @@ import {
 } from 'react-router';
 import z from 'zod';
 import { prisma } from '../../../utils/db.server';
+import { getAvatarUrl } from '../../../utils/misc';
 import {
   removeProfileImage,
   uploadProfileImage,
@@ -167,7 +168,6 @@ export const UserEdit = () => {
         <Form
           method="POST"
           encType="multipart/form-data"
-          className="flex flex-col gap-8"
           {...getFormProps(form)}
         >
           <DrawerHeader>
@@ -187,7 +187,7 @@ export const UserEdit = () => {
                 inputProps={getInputProps(fields.file, {
                   type: 'file',
                 })}
-                src={`/users/${user.id}/avatar?objectKey=${user.image?.objectKey}`}
+                src={getAvatarUrl(user)}
                 fallbackElement={<UserIcon />}
                 onRemove={() => {
                   setImageObjectKey(undefined);

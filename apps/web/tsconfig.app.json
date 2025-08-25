@@ -20,7 +20,8 @@
     "**/.server/**/*.ts",
     "**/.server/**/*.tsx",
     "**/.client/**/*.ts",
-    "**/.client/**/*.tsx"
+    "**/.client/**/*.tsx",
+    "../../libs/ui/src/lib/profile-dropdown-menu.tsx"
   ],
   "exclude": [
     "out-tsc",
@@ -50,6 +51,9 @@
     "eslint.config.mjs"
   ],
   "references": [
+    {
+      "path": "../../libs/data/tsconfig.lib.json"
+    },
     {
       "path": "../../libs/manage-list/feature/tsconfig.lib.json"
     },

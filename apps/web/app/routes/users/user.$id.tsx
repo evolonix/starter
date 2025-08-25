@@ -9,7 +9,7 @@ import {
 } from '@~~_starter.org_name_~~/ui';
 import { data, LoaderFunctionArgs, useLoaderData } from 'react-router';
 import { prisma } from '../../utils/db.server';
-import { formatDateTime } from '../../utils/misc';
+import { formatDateTime, getAvatarUrl } from '../../utils/misc';
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const user = await prisma.user.findFirst({
@@ -44,7 +44,7 @@ export const User = () => {
             <div className="lg:pl-20">
               <div className="px-2.5 pt-2.5 sm:max-w-xs lg:max-w-none">
                 <Image
-                  src={`/users/${user.id}/avatar?objectKey=${user.image?.objectKey}`}
+                  src={getAvatarUrl(user)}
                   fallbackElement={<UserIcon />}
                   alt={user.image?.altText ?? user.name}
                   sizes="(min-width: 1024px) 32rem, (min-width: 640px) 20rem, 40rem"

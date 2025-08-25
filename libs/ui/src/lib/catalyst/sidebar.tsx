@@ -125,7 +125,7 @@ export function SidebarHeading({
       {...props}
       className={clsx(
         className,
-        'mb-1 px-2 text-xs/6 font-medium whitespace-nowrap text-zinc-500 dark:text-zinc-400',
+        'mb-1 px-2 text-xs/6 font-medium whitespace-nowrap text-zinc-600 dark:text-zinc-400',
         !isExpanded && initials ? 'text-center' : '',
       )}
       title={isExpanded ? undefined : String(children)}

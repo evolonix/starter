@@ -19,7 +19,7 @@ export const Image = ({
 }: ImageProps) => {
   const [imgSrc, setImgSrc] = useState(placeholderSrc ?? src);
   const [loading, setLoading] = useState(!!placeholderSrc);
-  const [showFallbackElement, setShowFallbackElement] = useState(false);
+  const [showFallbackElement, setShowFallbackElement] = useState(!imgSrc);
 
   useEffect(() => {
     setImgSrc(src);
