@@ -1,7 +1,7 @@
 import { getFormProps, getInputProps, useForm } from '@conform-to/react';
 import { getZodConstraint, parseWithZod } from '@conform-to/zod';
 import { UserIcon } from '@heroicons/react/24/solid';
-import { User, UserImage } from '@prisma/client';
+import { UserWithImage } from '@~~_starter.org_name_~~/data';
 import {
   Button,
   DrawerActions,
@@ -23,7 +23,7 @@ import {
   data,
   useFetcher,
   useNavigate,
-  useSearchParams,
+  useParams,
 } from 'react-router';
 import z from 'zod';
 import { prisma } from '../../../utils/db.server';
@@ -93,14 +93,11 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export const UserNew = () => {
-  const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get('redirectTo');
+  const { id } = useParams();
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const fetcher = useFetcher<typeof action>();
-  const [user, setUser] = useState<
-    (User & { image: UserImage | null }) | undefined
-  >();
+  const [user, setUser] = useState<UserWithImage | undefined>();
 
   const [form, fields] = useForm<UserFormData>({
     id: 'new-user',
@@ -130,17 +127,13 @@ export const UserNew = () => {
         preventCloseOnOutsideClick
         open={open}
         close={() => {
-          navigate(
-            user?.id
-              ? `/admin/users/${user.id}`
-              : (redirectTo ?? '/admin/users'),
-          );
+          const userId = user?.id ?? id;
+          navigate(userId ? `/admin/users/${userId}` : '/admin/users');
         }}
       >
         <fetcher.Form
           method="POST"
           encType="multipart/form-data"
-          className="flex flex-col gap-8"
           {...getFormProps(form)}
         >
           <DrawerHeader>

@@ -15,6 +15,7 @@ export const getSessionExpirationDate = () =>
   new Date(Date.now() + SESSION_EXPIRATION_TIME);
 
 export const sessionKey = 'sessionId';
+export const impersonatorSessionKey = 'impersonatorSessionId';
 
 export const authenticator = new Authenticator<ProviderUser>();
 
@@ -276,3 +277,28 @@ export async function checkIsCommonPassword(password: string) {
     return false;
   }
 }
+
+export const getImpersonator = async (request: Request) => {
+  const { getSession } = authSessionStorage;
+  const cookieSession = await getSession(request.headers.get('cookie'));
+
+  const impersonatorSessionId = cookieSession.get(impersonatorSessionKey);
+
+  if (!impersonatorSessionId) {
+    return null;
+  }
+
+  const session = await prisma.session.findUnique({
+    where: { id: impersonatorSessionId },
+  });
+
+  if (!session) {
+    return null;
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session?.userId },
+  });
+
+  return { user, session };
+};

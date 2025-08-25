@@ -102,8 +102,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const honeyProps = await honeypot.getInputProps();
 
   return data({
-    user,
     honeyProps,
+    user,
   });
 }
 

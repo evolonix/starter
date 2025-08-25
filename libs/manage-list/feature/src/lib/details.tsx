@@ -1,8 +1,4 @@
-import { PencilIcon, TrashIcon } from '@heroicons/react/20/solid';
 import {
-  Alert,
-  AlertActions,
-  AlertTitle,
   Button,
   Divider,
   Heading,
@@ -10,7 +6,7 @@ import {
 } from '@~~_starter.org_name_~~/ui';
 import { useScrollHeight } from '@~~_starter.org_name_~~/util';
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Entity } from './models';
 
 interface DetailsProps<T> {
@@ -50,60 +46,11 @@ export const DetailsTitle = ({ children }: { children?: React.ReactNode }) => {
 };
 
 interface DetailsActionsProps {
-  isLoading?: boolean;
-  editUrl: string;
-  deletePrompt?: string;
-  onDelete?: () => void;
+  children: React.ReactNode;
 }
 
-export const DetailsActions = ({
-  isLoading = false,
-  editUrl,
-  deletePrompt,
-  onDelete,
-}: DetailsActionsProps) => {
-  const [showAlert, setShowAlert] = useState(false);
-
-  return (
-    <>
-      <div className="flex flex-wrap items-center gap-2">
-        <Button href={editUrl} outline disabled={isLoading}>
-          <PencilIcon />
-          Edit
-        </Button>
-        {onDelete ? (
-          <Button
-            outline
-            disabled={isLoading}
-            onClick={() => setShowAlert(true)}
-          >
-            <TrashIcon />
-            Delete
-          </Button>
-        ) : null}
-      </div>
-
-      <Alert open={showAlert} onClose={setShowAlert}>
-        <AlertTitle>
-          {deletePrompt ?? 'Are you sure you want to delete this item?'}
-        </AlertTitle>
-        <AlertActions>
-          <Button
-            color="red"
-            onClick={() => {
-              setShowAlert(false);
-              onDelete?.();
-            }}
-          >
-            Yes, delete this item
-          </Button>
-          <Button plain onClick={() => setShowAlert(false)}>
-            No, keep this item
-          </Button>
-        </AlertActions>
-      </Alert>
-    </>
-  );
+export const DetailsActions = ({ children }: DetailsActionsProps) => {
+  return <div className="flex flex-wrap items-center gap-2">{children}</div>;
 };
 
 interface DetailsHeaderProps {

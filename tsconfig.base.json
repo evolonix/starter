@@ -19,6 +19,7 @@
     "customConditions": ["development"],
     "baseUrl": ".",
     "paths": {
+      "@~~_starter.org_name_~~/data": ["libs/data/src/index.ts"],
       "@~~_starter.org_name_~~/feature-flags": [
         "libs/features/feature-flags/src/index.ts"
       ],

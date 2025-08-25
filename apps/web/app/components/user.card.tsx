@@ -1,20 +1,26 @@
 import { UserIcon } from '@heroicons/react/24/solid';
-import { User, UserImage } from '@prisma/client';
+import { Permission, Role } from '@prisma/client';
+import { UserWithImage } from '@~~_starter.org_name_~~/data';
 import { Heading, Image, Link, Text } from '@~~_starter.org_name_~~/ui';
 import { To } from 'react-router';
+import { getAvatarUrl } from '../utils/misc';
+import { userHasRole } from '../utils/user';
+import { AdminIndicator } from './admin.indicator';
 
 interface UserCardProps {
   isLoading?: boolean;
-  user: User & { image: UserImage | null };
+  user: UserWithImage & {
+    roles: (Role & { permissions: Permission[] })[];
+  };
   href: string | To;
 }
 
 export const UserCard = ({ isLoading, user, href }: UserCardProps) => {
   return (
     <div className={isLoading ? 'animate-pulse' : ''}>
-      <div className="flex flex-col overflow-hidden rounded-lg bg-zinc-100 shadow sm:flex-row dark:bg-zinc-800">
+      <div className="relative flex flex-col overflow-hidden rounded-lg bg-zinc-100 shadow sm:flex-row dark:bg-zinc-800">
         <Image
-          src={`/users/${user.id}/avatar?objectKey=${user.image?.objectKey}`}
+          src={getAvatarUrl(user)}
           fallbackElement={<UserIcon />}
           alt={user.image?.altText ?? user.name}
           className="object-cover sm:size-56"
@@ -27,6 +33,7 @@ export const UserCard = ({ isLoading, user, href }: UserCardProps) => {
             <Text>{user.email}</Text>
           </div>
         </div>
+        {userHasRole(user, 'admin') ? <AdminIndicator /> : null}
       </div>
     </div>
   );

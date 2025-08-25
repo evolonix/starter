@@ -17,7 +17,7 @@ import {
   Avatar,
   Dropdown,
   DropdownButton,
-  Sidebar,
+  Logo,
   SidebarBody,
   SidebarDivider,
   SidebarFooter,
@@ -27,25 +27,26 @@ import {
   SidebarLabel,
   SidebarSection,
   SidebarSpacer,
-} from './catalyst';
-import { Logo } from './logo';
-import { ProfileDropdownMenu } from './profile-dropdown-menu';
+  Sidebar as UiSidebar,
+} from '@~~_starter.org_name_~~/ui';
 
-export interface LayoutSidebarProps {
+export interface SidebarProps {
   isExpanded?: boolean;
   user?: { name: string; email: string } | null;
   avatarUrl?: string;
   isDeveloper?: boolean;
   isAdmin?: boolean;
+  profileDropdownMenu?: React.ReactNode;
 }
 
-export const LayoutSidebar = ({
+export const Sidebar = ({
   isExpanded = false,
   user,
   avatarUrl,
   isDeveloper = false,
   isAdmin = false,
-}: LayoutSidebarProps) => {
+  profileDropdownMenu,
+}: SidebarProps) => {
   const { pathname } = useLocation();
 
   const isCurrent = useCallback(
@@ -63,7 +64,7 @@ export const LayoutSidebar = ({
   );
 
   return (
-    <Sidebar>
+    <UiSidebar>
       <SidebarHeader>
         <SidebarItem
           href="/"
@@ -121,9 +122,9 @@ export const LayoutSidebar = ({
             Developer
           </SidebarHeading>
           <SidebarItem
-            href="/cdk"
+            href="/developer/cdk"
             title={isExpanded ? undefined : 'CDK'}
-            current={isCurrent('/cdk')}
+            current={isCurrent('/developer/cdk')}
           >
             <CodeBracketIcon />
             <SidebarLabel>CDK</SidebarLabel>
@@ -204,9 +205,9 @@ export const LayoutSidebar = ({
             </span>
             {isExpanded ? <ChevronUpIcon /> : null}
           </DropdownButton>
-          <ProfileDropdownMenu anchor="top start" />
+          {profileDropdownMenu}
         </Dropdown>
       </SidebarFooter>
-    </Sidebar>
+    </UiSidebar>
   );
 };

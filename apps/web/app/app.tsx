@@ -1,10 +1,17 @@
+import { SidebarLayout } from '@~~_starter.org_name_~~/ui';
 import {
-  LayoutNavbar,
-  LayoutSidebar,
-  SidebarLayout,
-} from '@~~_starter.org_name_~~/ui';
-import { LoaderFunctionArgs, Outlet, redirect } from 'react-router';
-import { getUserId } from './utils/auth.server';
+  data,
+  LoaderFunctionArgs,
+  Outlet,
+  redirect,
+  useLoaderData,
+} from 'react-router';
+import { ImpersonatingBanner } from './components/impersonating.banner';
+import { Navbar } from './components/navbar';
+import { ProfileDropdownMenu } from './components/profile-dropdown-menu';
+import { Sidebar } from './components/sidebar';
+import { getImpersonator, getUserId } from './utils/auth.server';
+import { getAvatarUrl } from './utils/misc';
 import { userHasRole, useUser } from './utils/user';
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -14,28 +21,44 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect('/login?redirectTo=' + encodeURIComponent(request.url));
   }
 
-  return null;
+  const impersonator = await getImpersonator(request);
+
+  return data({ impersonator: impersonator?.user ?? undefined });
 }
 
 export function App() {
+  const { impersonator } = useLoaderData<typeof loader>();
   const user = useUser();
   const isDeveloper = userHasRole(user, 'developer');
   const isAdmin = userHasRole(user, 'admin');
 
   return (
     <SidebarLayout
+      banner={<ImpersonatingBanner impersonator={impersonator} user={user} />}
       navbar={
-        <LayoutNavbar
+        <Navbar
           user={user}
-          avatarUrl={`/users/${user?.id}/avatar?objectKey=${user?.image?.objectKey}`}
+          avatarUrl={getAvatarUrl(user)}
+          profileDropdownMenu={
+            <ProfileDropdownMenu
+              anchor="bottom end"
+              impersonator={impersonator}
+            />
+          }
         />
       }
       sidebar={
-        <LayoutSidebar
+        <Sidebar
           user={user}
-          avatarUrl={`/users/${user?.id}/avatar?objectKey=${user?.image?.objectKey}`}
+          avatarUrl={getAvatarUrl(user)}
           isDeveloper={isDeveloper}
           isAdmin={isAdmin}
+          profileDropdownMenu={
+            <ProfileDropdownMenu
+              anchor="top start"
+              impersonator={impersonator}
+            />
+          }
         />
       }
     >

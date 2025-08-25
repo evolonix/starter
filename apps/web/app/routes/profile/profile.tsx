@@ -10,7 +10,7 @@ import {
   Text,
 } from '@~~_starter.org_name_~~/ui';
 import { Outlet } from 'react-router';
-import { formatDateTime } from '../../utils/misc';
+import { formatDateTime, getAvatarUrl } from '../../utils/misc';
 import { useUser } from '../../utils/user';
 
 export const Profile = () => {
@@ -28,7 +28,7 @@ export const Profile = () => {
             <div className="lg:pl-20">
               <div className="px-2.5 pt-2.5 sm:max-w-xs lg:max-w-none">
                 <Image
-                  src={`/users/${user.id}/avatar?objectKey=${user.image?.objectKey}`}
+                  src={getAvatarUrl(user)}
                   fallbackElement={<UserIcon className="size-64" />}
                   alt={user.image?.altText ?? user.name}
                   sizes="(min-width: 1024px) 32rem, (min-width: 640px) 20rem, 40rem"

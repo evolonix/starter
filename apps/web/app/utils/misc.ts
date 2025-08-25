@@ -1,6 +1,13 @@
+import { UserWithImage } from '@~~_starter.org_name_~~/data';
 import { useEffect, useMemo, useRef } from 'react';
 import { useFormAction, useNavigation } from 'react-router';
 import { useSpinDelay } from 'spin-delay';
+
+export function getAvatarUrl(user?: UserWithImage) {
+  return user && user.image?.objectKey
+    ? `/users/${user?.id}/avatar?objectKey=${encodeURIComponent(user.image.objectKey)}`
+    : undefined;
+}
 
 export function getErrorMessage(error: unknown) {
   if (typeof error === 'string') return error;
